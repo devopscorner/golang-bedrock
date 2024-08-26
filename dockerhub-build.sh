@@ -8,7 +8,7 @@
 set -e
 
 # export CI_PROJECT_PATH="devopscorner"
-# export CI_PROJECT_NAME="restfulapi-bedrock"
+# export CI_PROJECT_NAME="golang-bedrock"
 
 # export IMAGE="$CI_PROJECT_PATH/$CI_PROJECT_NAME"
 export IMAGE=$2
@@ -63,7 +63,7 @@ docker_build() {
 }
 
 main() {
-  # docker_build Dockerfile devopscorner/restfulapi-bedrock alpine [version|latest|tags] [custom-tags]
+  # docker_build Dockerfile devopscorner/golang-bedrock alpine [version|latest|tags] [custom-tags]
   docker_build $1 $2 $3 $4 $5
   echo ''
   echo '-- ALL DONE --'

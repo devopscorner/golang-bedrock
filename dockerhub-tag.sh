@@ -8,7 +8,7 @@
 set -e
 
 # export CI_PROJECT_PATH="devopscorner"
-# export CI_PROJECT_NAME="restfulapi-bedrock"
+# export CI_PROJECT_NAME="golang-bedrock"
 
 # export IMAGE="$CI_PROJECT_PATH/$CI_PROJECT_NAME"
 export IMAGE=$1
@@ -44,7 +44,7 @@ docker_tag() {
 }
 
 main() {
-  # set_tag devopscorner/restfulapi-bedrock alpine [version|latest|tags] [custom-tags]
+  # set_tag devopscorner/golang-bedrock alpine [version|latest|tags] [custom-tags]
   set_tag $1 $2 $3 $4
   docker_tag
   echo ''

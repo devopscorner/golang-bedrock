@@ -29,7 +29,7 @@ configMap:
       }
 
 image:
-  repository: devopscorner/golang-restfulapi-bedrock
+  repository: devopscorner/golang-bedrock
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "1.23.14-alpine"

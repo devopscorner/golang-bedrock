@@ -2,9 +2,9 @@
 package controller
 
 import (
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/middleware"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/utility"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/view"
+	"github.com/devopscorner/golang-bedrock/src/middleware"
+	"github.com/devopscorner/golang-bedrock/src/utility"
+	"github.com/devopscorner/golang-bedrock/src/view"
 	"github.com/gin-gonic/gin"
 	validator "github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"

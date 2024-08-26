@@ -1,0 +1,21 @@
+{
+	"id": "c48067c4-c463-484c-899b-7d9434bc86ed",
+	"values": [
+		{
+			"key": "api_url",
+			"value": "localhost",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "auth_token",
+			"value": "auth_token",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2024-08-26T23:14:06.012Z",
+	"_postman_exported_using": "Postman/10.24.27"
+}

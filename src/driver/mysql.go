@@ -5,8 +5,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/model"
+	"github.com/devopscorner/golang-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

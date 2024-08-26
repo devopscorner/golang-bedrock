@@ -7,9 +7,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/config"
 	"github.com/gin-gonic/gin"
 	"github.com/grafana/loki-client-go/loki"
+	"github.com/grafana/loki-client-go/pkg/urlutil"
 	"github.com/prometheus/common/model"
 )
 
@@ -17,24 +18,20 @@ var lokiClient *loki.Client
 var lokiURL *url.URL
 
 func InitLokiLogger(cfg *config.Config) error {
-	lokiURL, err := url.Parse(cfg.LokiEndpoint)
+	var err error
+	lokiURL, err = url.Parse(cfg.LokiEndpoint)
 	if err != nil {
 		return fmt.Errorf("invalid Loki URL: %v", err)
 	}
 
 	lokiConfig := loki.Config{
-		ClientConfig: loki.ClientConfig{
-			URL:            lokiURL,
-			BatchWait:      1 * time.Second,
-			BatchSize:      1024 * 1024,
-			Client:         nil,
-			BackoffConfig:  nil,
-			ExternalLabels: nil,
-			Timeout:        0,
-		},
+		URL:       urlutil.URLValue{URL: lokiURL},
+		BatchWait: 1 * time.Second,
+		BatchSize: 1024 * 1024,
+		Timeout:   10 * time.Second,
 	}
 
-	client, err := loki.NewWithConfig(lokiConfig)
+	client, err := loki.New(lokiConfig)
 	if err != nil {
 		return fmt.Errorf("failed to create Loki client: %v", err)
 	}

@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/driver"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/model"
+	"github.com/devopscorner/golang-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/driver"
+	"github.com/devopscorner/golang-bedrock/src/model"
 	"gorm.io/gorm"
 )
 

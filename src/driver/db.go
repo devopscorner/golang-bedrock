@@ -2,7 +2,7 @@
 package driver
 
 import (
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/config"
 	"gorm.io/gorm"
 )
 

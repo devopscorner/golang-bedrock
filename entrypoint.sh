@@ -38,7 +38,7 @@ export OTEL_INSTRUMENTATION_LOG_ENABLED=true
 # Trace Type: xray / jaeger
 export OTEL_INSTRUMENTATION_TRACE_NAME=xray
 
-export OTEL_SERVICE_NAME=restfulapi-bedrock
+export OTEL_SERVICE_NAME=golang-bedrock
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 export OTEL_EXPORTER_OTLP_INSECURE=true
 export OTEL_EXPORTER_OTLP_HEADERS=

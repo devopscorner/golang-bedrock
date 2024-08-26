@@ -64,9 +64,9 @@ docker_build() {
 }
 
 main() {
-  # docker_build 0987654321 Dockerfile devopscorner/restfulapi-bedrock alpine [version|latest|tags] [custom-tags]
-  # docker_build 0987654321 Dockerfile.alpine-3.16 devopscorner/restfulapi-bedrock alpine [version|latest|tags] [custom-tags]
-  # docker_build 0987654321 Dockerfile.alpine-3.17 devopscorner/restfulapi-bedrock alpine [version|latest|tags] [custom-tags]
+  # docker_build 0987654321 Dockerfile devopscorner/golang-bedrock alpine [version|latest|tags] [custom-tags]
+  # docker_build 0987654321 Dockerfile.alpine-3.16 devopscorner/golang-bedrock alpine [version|latest|tags] [custom-tags]
+  # docker_build 0987654321 Dockerfile.alpine-3.17 devopscorner/golang-bedrock alpine [version|latest|tags] [custom-tags]
   docker_build $1 $2 $3 $4 $5 $6
   echo ''
   echo '-- ALL DONE --'

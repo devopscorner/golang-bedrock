@@ -3,7 +3,7 @@ package view
 import (
 	"net/http"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/config"
 	"github.com/gin-gonic/gin"
 )
 

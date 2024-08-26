@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/view"
+	"github.com/devopscorner/golang-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/view"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/spf13/viper"

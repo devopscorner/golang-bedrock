@@ -40,7 +40,7 @@ docker_pull() {
 
 main() {
   login_ecr
-  # docker_pull 0987654321 devopscorner/restfulapi-bedrock alpine
+  # docker_pull 0987654321 devopscorner/golang-bedrock alpine
   docker_pull $AWS_ACCOUNT_ID $2 $3
   echo ''
   echo '-- ALL DONE --'

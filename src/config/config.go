@@ -83,7 +83,7 @@ func LoadConfig() (*Config, error) {
 	viper.SetDefault("DB_CONNECTION", "sqlite")
 	viper.SetDefault("DB_HOST", "0.0.0.0")
 	viper.SetDefault("DB_PORT", 5000)
-	viper.SetDefault("DB_DATABASE", "golang-restfulapi-bedrock.db")
+	viper.SetDefault("DB_DATABASE", "golang-bedrock.db")
 	viper.SetDefault("DB_USERNAME", "root")
 	viper.SetDefault("DB_PASSWORD", "")
 	viper.SetDefault("JWT_AUTH_USERNAME", "devopscorner")
@@ -114,7 +114,7 @@ func LoadConfig() (*Config, error) {
 	viper.SetDefault("OTEL_INSTRUMENTATION_METRIC_ENABLED", "true") // Prometheus Enable?
 	viper.SetDefault("OTEL_INSTRUMENTATION_TRACE_ENABLED", "true")  // Tracing Enable?
 	viper.SetDefault("OTEL_INSTRUMENTATION_LOG_ENABLED", "true")    // Logging Enable?
-	viper.SetDefault("OTEL_SERVICE_NAME", "restfulapi-bedrock")     // Service Name OTEL
+	viper.SetDefault("OTEL_SERVICE_NAME", "golang-bedrock")         // Service Name OTEL
 	viper.SetDefault("OTEL_EXPORTER_OTLP_ENDPOINT", "http://0.0.0.0:4317")
 	viper.SetDefault("OTEL_EXPORTER_OTLP_PORT", 4317)
 	viper.SetDefault("OTEL_EXPORTER_OTLP_INSECURE", "true")

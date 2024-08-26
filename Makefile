@@ -8,33 +8,33 @@
 # use [TAB] instead [SPACE]
 
 export PATH_DOCKER="."
-export PROJECT_NAME="golang-restfulapi-bedrock"
+export PROJECT_NAME="golang-bedrock"
 export AWS_DEFAULT_REGION="us-west-2"
-export TF_PATH="terraform/environment/providers/aws/infra"
-export TF_CORE="$(TF_PATH)/core"
-export TF_RESOURCES="$(TF_PATH)/resources"
-export TF_STATE="$(TF_PATH)/tfstate"
+export TF_PATH="terraform/devopscorner/devopspoc"
+export TF_CORE="$(TF_PATH)/_core_eks"
+export TF_STATE="$(TF_PATH)/_tfstate"
+export TF_RESOURCES="$(TF_PATH)/eks"
 
 export TF_MODULES="terraform/modules/providers/aws"
 
 export CI_REGISTRY     ?= $(ARGS).dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
 export CI_PROJECT_PATH ?= devopscorner
-export CI_PROJECT_NAME ?= golang-restfulapi-bedrock
+export CI_PROJECT_NAME ?= golang-bedrock
 
 IMAGE          = $(CI_REGISTRY)/${CI_PROJECT_PATH}/${CI_PROJECT_NAME}
 DIR            = $(shell pwd)
 VERSION       ?= 1.7.0
 
 export BASE_IMAGE=alpine
-export BASE_VERSION=3.17
-export ALPINE_VERSION=3.17
+export BASE_VERSION=3.20
+export ALPINE_VERSION=3.20
 
-GO_APP        ?= golang-restfulapi-bedrock
+GO_APP        ?= golang-bedrock
 SOURCES        = $(shell find . -name '*.go' | grep -v /vendor/)
 VERSION       ?= $(shell git describe --tags --always --dirty)
 GOPKGS         = $(shell go list ./ | grep -v /vendor/)
 BUILD_FLAGS   ?=
-LDFLAGS       ?= -X github.com/devopscorner/golang-adot/src/config.Version=$(VERSION) -w -s
+LDFLAGS       ?= -X github.com/devopscorner/$(GO_APP)/src/config.Version=$(VERSION) -w -s
 TAG           ?= "v0.3.0"
 GOARCH        ?= amd64
 GOOS          ?= linux

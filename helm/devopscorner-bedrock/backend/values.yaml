@@ -26,7 +26,7 @@ configMap:
       }
 
 image:
-  repository: devopscorner/golang-restfulapi-bedrock
+  repository: devopscorner/golang-bedrock
   pullPolicy: IfNotPresent # IfNotPresent -or- Always
   tag: "alpine"
 

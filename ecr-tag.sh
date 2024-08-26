@@ -40,7 +40,7 @@ docker_tag() {
 }
 
 main() {
-  # set_tag 0987654321 devopscorner/restfulapi-bedrock alpine [version|latest|tags] [custom-tags]
+  # set_tag 0987654321 devopscorner/golang-bedrock alpine [version|latest|tags] [custom-tags]
   set_tag $1 $2 $3 $4 $5
   docker_tag
   echo ''

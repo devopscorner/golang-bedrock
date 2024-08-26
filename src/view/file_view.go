@@ -4,7 +4,7 @@ package view
 import (
 	"net/http"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/model"
+	"github.com/devopscorner/golang-bedrock/src/model"
 	"github.com/gin-gonic/gin"
 )
 

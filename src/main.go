@@ -1,13 +1,14 @@
+// main.go
 package main
 
 import (
 	"fmt"
 	"log"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/driver"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/routes"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/utility"
+	"github.com/devopscorner/golang-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/driver"
+	"github.com/devopscorner/golang-bedrock/src/routes"
+	"github.com/devopscorner/golang-bedrock/src/utility"
 	"github.com/gin-gonic/gin"
 )
 
@@ -63,5 +64,7 @@ func main() {
 	// Start the server
 	port := fmt.Sprintf(":%d", cfg.AppPort)
 	log.Printf("Server is running on %s", port)
-	router.Run(port)
+	if err := router.Run(port); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

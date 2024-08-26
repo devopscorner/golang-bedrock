@@ -246,7 +246,8 @@
 							"tests[\"Token: \"+token] = response_data;",
 							"// tests[\"Refresh Token: \"+refresh_token] = response_data;"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -264,16 +265,15 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"devopscorner\",\n    \"password\": \"DevOpsCorner2023\"\n}"
+					"raw": "{\n    \"username\": \"devopscorner\",\n    \"password\": \"DevOpsCorner2024\"\n}"
 				},
 				"url": {
-					"raw": "{{api_url}}:8080/v1/login",
+					"raw": "{{api_url}}:8080/login",
 					"host": [
 						"{{api_url}}"
 					],
 					"port": "8080",
 					"path": [
-						"v1",
 						"login"
 					]
 				},

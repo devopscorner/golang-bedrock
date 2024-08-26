@@ -2,7 +2,8 @@
 package routes
 
 import (
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/controller"
+	"github.com/devopscorner/golang-bedrock/src/controller"
+	"github.com/devopscorner/golang-bedrock/src/middleware"
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -11,13 +12,13 @@ import (
 var tracer = otel.Tracer("file-routes")
 
 func SetupFileRoutes(rg *gin.RouterGroup, fileController *controller.FileController) {
-	fileGroup := rg.Group("v1/files")
+	api := rg.Group("/v1/files", middleware.AuthMiddleware())
 	{
-		fileGroup.GET("", wrapHandler("FindAll", fileController.FindAll))
-		fileGroup.GET("/:id", wrapHandler("FindByID", fileController.FindByID))
-		fileGroup.POST("", wrapHandler("CreateFile", fileController.CreateFile))
-		fileGroup.PUT("/:id", wrapHandler("UpdateFile", fileController.UpdateFile))
-		fileGroup.DELETE("/:id", wrapHandler("DeleteFile", fileController.DeleteFile))
+		api.GET("", wrapHandler("FindAll", fileController.FindAll))
+		api.GET("/:id", wrapHandler("FindByID", fileController.FindByID))
+		api.POST("", wrapHandler("CreateFile", fileController.CreateFile))
+		api.PUT("/:id", wrapHandler("UpdateFile", fileController.UpdateFile))
+		api.DELETE("/:id", wrapHandler("DeleteFile", fileController.DeleteFile))
 	}
 }
 

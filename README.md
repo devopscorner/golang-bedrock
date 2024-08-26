@@ -2,19 +2,19 @@
 
 ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API Golang
 
-[![goreport](https://goreportcard.com/badge/github.com/devopscorner/golang-restfulapi-bedrock/src)](https://goreportcard.com/badge/github.com/devopscorner/golang-restfulapi-bedrock/src)
-[![all contributors](https://img.shields.io/github/contributors/devopscorner/golang-restfulapi-bedrock)](https://github.com/devopscorner/golang-restfulapi-bedrock/graphs/contributors)
-[![tags](https://img.shields.io/github/v/tag/devopscorner/golang-restfulapi-bedrock?sort=semver)](https://github.com/devopscorner/golang-restfulapi-bedrock/releases)
-[![docker pulls](https://img.shields.io/docker/pulls/devopscorner/restfulapi-bedrock.svg)](https://hub.docker.com/r/devopscorner/restfulapi-bedrock/)
-![download all](https://img.shields.io/github/downloads/devopscorner/golang-restfulapi-bedrock/total.svg)
-![download latest](https://img.shields.io/github/downloads/devopscorner/golang-restfulapi-bedrock/1.1.4/total)
-![view](https://views.whatilearened.today/views/github/devopscorner/golang-restfulapi-bedrock.svg)
-![clone](https://img.shields.io/badge/dynamic/json?color=success&label=clone&query=count&url=https://github.com/devopscorner/golang-restfulapi-bedrock/blob/master/clone.json?raw=True&logo=github)
-[![issues](https://img.shields.io/github/issues/devopscorner/golang-restfulapi-bedrock)](https://github.com/devopscorner/golang-restfulapi-bedrock/issues)
-[![pull requests](https://img.shields.io/github/issues-pr/devopscorner/golang-restfulapi-bedrock)](https://github.com/devopscorner/golang-restfulapi-bedrock/pulls)
-[![forks](https://img.shields.io/github/forks/devopscorner/golang-restfulapi-bedrock)](https://github.com/devopscorner/golang-restfulapi-bedrock/fork)
-[![stars](https://img.shields.io/github/stars/devopscorner/golang-restfulapi-bedrock)](https://github.com/devopscorner/golang-restfulapi-bedrock/stargazers)
-[![license](https://img.shields.io/github/license/devopscorner/golang-restfulapi-bedrock)](https://img.shields.io/github/license/devopscorner/golang-restfulapi-bedrock)
+[![goreport](https://goreportcard.com/badge/github.com/devopscorner/golang-bedrock/src)](https://goreportcard.com/badge/github.com/devopscorner/golang-bedrock/src)
+[![all contributors](https://img.shields.io/github/contributors/devopscorner/golang-bedrock)](https://github.com/devopscorner/golang-bedrock/graphs/contributors)
+[![tags](https://img.shields.io/github/v/tag/devopscorner/golang-bedrock?sort=semver)](https://github.com/devopscorner/golang-bedrock/releases)
+[![docker pulls](https://img.shields.io/docker/pulls/devopscorner/golang-bedrock.svg)](https://hub.docker.com/r/devopscorner/golang-bedrock/)
+![download all](https://img.shields.io/github/downloads/devopscorner/golang-bedrock/total.svg)
+![download latest](https://img.shields.io/github/downloads/devopscorner/golang-bedrock/1.1.4/total)
+![view](https://views.whatilearened.today/views/github/devopscorner/golang-bedrock.svg)
+![clone](https://img.shields.io/badge/dynamic/json?color=success&label=clone&query=count&url=https://github.com/devopscorner/golang-bedrock/blob/master/clone.json?raw=True&logo=github)
+[![issues](https://img.shields.io/github/issues/devopscorner/golang-bedrock)](https://github.com/devopscorner/golang-bedrock/issues)
+[![pull requests](https://img.shields.io/github/issues-pr/devopscorner/golang-bedrock)](https://github.com/devopscorner/golang-bedrock/pulls)
+[![forks](https://img.shields.io/github/forks/devopscorner/golang-bedrock)](https://github.com/devopscorner/golang-bedrock/fork)
+[![stars](https://img.shields.io/github/stars/devopscorner/golang-bedrock)](https://github.com/devopscorner/golang-bedrock/stargazers)
+[![license](https://img.shields.io/github/license/devopscorner/golang-bedrock)](https://img.shields.io/github/license/devopscorner/golang-bedrock)
 
 ---
 
@@ -24,10 +24,10 @@ ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API 
 
 | Image name | Size |
 |------------|------|
-| `devopscorner/restfulapi-bedrock:latest` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/restfulapi-bedrock/latest.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/restfulapi-bedrock/tags?page=1&ordering=last_updated&name=latest) ![default-latest](https://img.shields.io/static/v1?label=latest&message=default&color=brightgreen) ![latest](https://img.shields.io/static/v1?label=latest&message=alpine&color=orange) |
-| `devopscorner/restfulapi-bedrock:alpine` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/restfulapi-bedrock/alpine.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/restfulapi-bedrock/tags?page=1&ordering=last_updated&name=alpine) ![latest](https://img.shields.io/static/v1?label=latest&message=alpine&color=orange) |
-| `devopscorner/restfulapi-bedrock:alpine-latest` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/restfulapi-bedrock/alpine-latest.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/restfulapi-bedrock/tags?page=1&ordering=last_updated&name=alpine-latest) |
-| `devopscorner/restfulapi-bedrock:alpine-3.20` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/restfulapi-bedrock/alpine-3.20.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/restfulapi-bedrock/tags?page=1&ordering=last_updated&name=alpine-3.20) |
+| `devopscorner/golang-bedrock:latest` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/golang-bedrock/latest.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/golang-bedrock/tags?page=1&ordering=last_updated&name=latest) ![default-latest](https://img.shields.io/static/v1?label=latest&message=default&color=brightgreen) ![latest](https://img.shields.io/static/v1?label=latest&message=alpine&color=orange) |
+| `devopscorner/golang-bedrock:alpine` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/golang-bedrock/alpine.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/golang-bedrock/tags?page=1&ordering=last_updated&name=alpine) ![latest](https://img.shields.io/static/v1?label=latest&message=alpine&color=orange) |
+| `devopscorner/golang-bedrock:alpine-latest` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/golang-bedrock/alpine-latest.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/golang-bedrock/tags?page=1&ordering=last_updated&name=alpine-latest) |
+| `devopscorner/golang-bedrock:alpine-3.20` | [![docker image size](https://img.shields.io/docker/image-size/devopscorner/golang-bedrock/alpine-3.20.svg?label=Image%20size&logo=docker)](https://hub.docker.com/repository/docker/devopscorner/golang-bedrock/tags?page=1&ordering=last_updated&name=alpine-3.20) |
 
 ---
 
@@ -54,7 +54,7 @@ ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API 
 │   └── sqlite.go
 ├── go.mod
 ├── go.sum
-├── golang-restfulapi-bedrock.db
+├── golang-bedrock.db
 ├── main.go
 ├── middleware
 │   └── auth_middleware.go
@@ -169,10 +169,10 @@ ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API 
   OTEL_INSTRUMENTATION_LOG_ENABLED=true
 
   # Trace Type: xray / jaeger
-  OTEL_INSTRUMENTATION_TRACE_NAME=xray
+  OTEL_INSTRUMENTATION_TRACE_NAME=jaeger
 
   OTEL_ENVIRONMENT=nonprod
-  OTEL_SERVICE_NAME=restfulapi-bedrock
+  OTEL_SERVICE_NAME=golang-bedrock
   OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
   OTEL_EXPORTER_OTLP_PORT=4317
   OTEL_EXPORTER_OTLP_INSECURE=true

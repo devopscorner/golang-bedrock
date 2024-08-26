@@ -9,7 +9,7 @@ import (
 	awsCfg "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/config"
 )
 
 var bedrockClient *bedrockruntime.Client

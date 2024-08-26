@@ -4,8 +4,8 @@ package repository
 import (
 	"context"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/model"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/utility"
+	"github.com/devopscorner/golang-bedrock/src/model"
+	"github.com/devopscorner/golang-bedrock/src/utility"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"gorm.io/gorm"

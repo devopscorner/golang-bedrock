@@ -4,8 +4,8 @@ package driver
 import (
 	"log"
 
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/config"
-	"github.com/devopscorner/golang-restfulapi-bedrock/src/model"
+	"github.com/devopscorner/golang-bedrock/src/config"
+	"github.com/devopscorner/golang-bedrock/src/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )

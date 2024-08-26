@@ -38,7 +38,7 @@ docker_push() {
 
 main() {
   login_ecr
-  # docker_push 0987654321 devopscorner/restfulapi-bedrock [alpine|version|latest|tags|custom-tags]
+  # docker_push 0987654321 devopscorner/golang-bedrock [alpine|version|latest|tags|custom-tags]
   docker_push $1 $2 $3
   echo ''
   echo '-- ALL DONE --'

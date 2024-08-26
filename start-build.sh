@@ -12,7 +12,7 @@ export AWS_DEFAULT_REGION="us-west-2"
 export CI_REGISTRY="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
 
 export CI_PROJECT_PATH="devopscorner"
-export CI_PROJECT_NAME="restfulapi-bedrock"
+export CI_PROJECT_NAME="golang-bedrock"
 
 export IMAGE="$CI_PROJECT_PATH/$CI_PROJECT_NAME"
 export ECR_IMAGE="$CI_REGISTRY/$CI_PROJECT_PATH/$CI_PROJECT_NAME"

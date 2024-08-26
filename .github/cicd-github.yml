@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      imageName: 'devopcorner/golang-restfulapi-bedrock'
+      imageName: 'devopcorner/golang-bedrock'
       ecrRegistry: '0987612345.dkr.ecr.us-west-2.amazonaws.com'
-      helmReleaseName: 'golang-restfulapi-bedrock'
+      helmReleaseName: 'golang-bedrock'
 
     steps:
     - name: Checkout Code

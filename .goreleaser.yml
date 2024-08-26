@@ -6,7 +6,7 @@ before:
     - go mod download
 
 builds:
-  - id: "go-restfulapi-bedrock"
+  - id: "go-golang-bedrock"
     main: ./src/main.go
     env:
       # - GOOS=linux
@@ -18,7 +18,7 @@ builds:
       - darwin
 
 archives:
-  - id: "archive-go-restfulapi-bedrock"
+  - id: "archive-go-golang-bedrock"
     name_template: "authc_{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     builds: # Builds reference which build instances should be archived in this archive.
       - "goapp"
