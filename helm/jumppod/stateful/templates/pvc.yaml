@@ -1,0 +1,36 @@
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "jumppod.fullname" . }}
+  namespace: {{ .Values.serviceAccount.namespace }}
+  {{- with .Values.persistence.annotations }}
+  annotations:
+    {{- toYaml . | indent 4 }}
+  {{- end }}
+  labels:
+    app: {{ template "jumppod.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode | quote }}
+  {{- if .Values.persistence.volumeMode }}
+  volumeMode: {{ .Values.persistence.volumeMode | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+    {{- else }}
+  storageClassName: "{{ .Values.persistence.storageClass }}"
+    {{- end }}
+  {{- end }}
+  {{- if .Values.persistence.selector }}
+  selector:
+    {{ toYaml .Values.persistence.selector | indent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,11 @@
+.root {
+  display: block;
+}
+
+.block {
+  width: 100%;
+}
+
+.content {
+  padding-bottom: 24px;
+}

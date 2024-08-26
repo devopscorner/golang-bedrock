@@ -1,0 +1,7 @@
+.root {
+  display: block;
+}
+
+.icon {
+  color: var(--success-text-color);
+}

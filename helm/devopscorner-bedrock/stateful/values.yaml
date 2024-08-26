@@ -1,0 +1,107 @@
+---
+replicaCount: 1
+
+secret:
+  enabled: false
+  name: "secret-devopscorner-bedrock"
+  mountPath: {}
+  subPath: {}
+  readOnly: true
+  data: {}
+
+configMap:
+  enabled: false
+  name: "config-devopscorner-bedrock"
+  mountPath: /app/core/config
+  readOnly: true
+  data:
+    .app.config.json: |-
+      {
+         "AppName": "DevOpsCorner Bedrock Helm Template",
+         "GRPCTimeout": 10,
+         "CacheExpiry": 300,
+         "CacheCleanup": 600,
+         "DefaultPageLimit": 3,
+         "ClientTimeout": 10
+      }
+
+image:
+  repository: devopscorner/golang-restfulapi-bedrock
+  pullPolicy: IfNotPresent # IfNotPresent -or- Always
+  tag: "alpine"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+  namespace: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+livenessProbe: {}
+
+readinessProbe: {}
+
+## Persist data to a persistent volume
+persistence:
+  enabled: false
+  # storageClass: "gp2"
+  accessMode: ReadWriteOnce
+  capacity: 20Gi
+  size: 8Gi
+  annotations: {}
+  selector: {}
+
+securityContext: {}
+
+service:
+  enabled: false
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: ""
+      paths: []
+  tls: []
+
+application:
+  enabled: true
+  env:
+    - name: HELM_TEMPLATE_NAME
+      value: devopscorner-bedrock
+
+envFrom:
+  enabled: false
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector:
+  enabled: true
+  select:
+    node: "default"
+
+tolerations: []
+
+affinity: {}

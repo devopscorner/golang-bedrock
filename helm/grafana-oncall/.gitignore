@@ -1,0 +1,14 @@
+*.pyc
+venv
+.python-version
+
+.vscode
+*.http
+.idea
+.DS_Store
+.env
+
+yarn.lock
+node_modules
+
+test-results

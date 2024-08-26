@@ -1,0 +1,164 @@
+---
+replicaCount: 1
+
+secret:
+  enabled: false
+  name: "secret-jumppod"
+  mountPath: {}
+  subPath: {}
+  readOnly: true
+  data: {}
+
+configMap:
+  enabled: false
+  name: "config-jumppod"
+  mountPath: /app/core/config
+  readOnly: true
+  data:
+    .app.config.json: |-
+      {
+          "AppName": "Jumppods Service",
+          "GRPCTimeout": 10,
+          "CacheExpiry": 300,
+          "CacheCleanup": 600,
+          "DefaultPageLimit": 3,
+          "ClientTimeout": 10
+      }
+
+image:
+  repository: devopscorner/cicd
+  pullPolicy: IfNotPresent
+  tag: "alpine"
+
+imagePullSecrets:
+  - name: "awscb-docker-secret"
+
+nameOverride: "awscb-jumppod"
+fullnameOverride: "awscb-jumppod"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: awscb-jumppod
+  namespace: devops-tools
+
+## Persist data to a persistent volume
+persistence:
+  enabled: true
+  storageClass: "nfs-client-metrics"
+  accessMode: ReadWriteOnce
+  capacity: 500Mi
+  size: 50Mi
+  annotations: {}
+  selector: {}
+  nfs:
+    path: "/devopscorner/jumppod"
+    server: "fs-0987612345.efs.us-west-2.amazonaws.com"
+
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+    - name: ssh
+      port: 2222
+      targetPort: 22
+      protocol: TCP
+
+containers:
+  ports:
+    - name: http
+      containerPort: 80
+      protocol: TCP
+    - name: ssh
+      containerPort: 22
+      protocol: TCP
+
+ingress:
+  enabled: true
+  ingressName: awscb-jumppods-ingress
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/acme-challenge-type: "http01"
+    cert-manager.io/cluster-issuer: "awscb-nonprod"
+    ingress.kubernetes.io/ssl-passthrough: "true"
+    ingress.kubernetes.io/whitelist-source-range: "10.103.0.0/16"
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Jumppods"
+    nginx.ingress.kubernetes.io/auth-secret: "jumppod-auth"
+    nginx.ingress.kubernetes.io/auth-type: "basic"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "*"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  hosts:
+    - host: jumppods.awscb.id
+      http:
+        paths:
+          - path: /
+            pathType: Prefix # Prefix -or - ImplementationSpecific
+            backend:
+              service:
+                name: awscb-jumppod
+                port:
+                  number: 80
+  tls:
+    - secretName: awscb-nonprod-jumppods-tls
+      hosts:
+        - jumppods.awscb.id
+  extraPaths: []
+
+application:
+  enabled: true
+  env:
+    - name: HELM_TEMPLATE_NAME
+      value: jumppod
+
+envFrom:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 200Mi
+  requests:
+    cpu: 140m
+    memory: 170Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector:
+  enabled: true
+  select:
+    node: "awscb-monitoring" # DEV/UAT Cluster
+
+tolerations: []
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+livenessProbe: {}
+
+readinessProbe: {}
+
+affinity: {}
+
+securityContext: {}

@@ -1,0 +1,323 @@
+image:
+  registry: docker.io
+  repository: bitnami/fluent-bit
+  tag: 2.2.0-debian-11-r0
+  digest: ""
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+  debug: false
+
+nameOverride: "fluenbit"
+fullnameOverride: "fluentbit"
+namespaceOverride: "monitoring"
+
+daemonset:
+  enabled: true
+  podSecurityContext:
+    enabled: true
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+  hostPaths:
+    logs: /var/log
+    containerLogs: /var/lib/docker/containers
+    machineId: /etc/machine-id
+
+# livenessProbe:
+#   enabled: true
+#   failureThreshold: 3
+#   initialDelaySeconds: 10
+#   periodSeconds: 15
+#   successThreshold: 1
+#   timeoutSeconds: 3
+
+# startupProbe:
+#   enabled: true
+#   initialDelaySeconds: 10
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 15
+#   successThreshold: 1
+
+# readinessProbe:
+#   enabled: true
+#   initialDelaySeconds: 300
+#   periodSeconds: 10
+#   timeoutSeconds: 3
+#   failureThreshold: 15
+#   successThreshold: 1
+
+# extraVolumeMounts:
+# - name: flb_kube
+#   mountPath: /tmp/flb_kube.db
+#   readOnly: true
+# - name: svc_account_ca_crt
+#   mountPath: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+#   readOnly: true
+# - name: svc_account_token
+#   mountPath: /var/run/secrets/kubernetes.io/serviceaccount/token
+#   readOnly: true
+# - name: mnt
+#   mountPath: /mnt
+#   readOnly: true
+
+containerPorts:
+  http: 2020
+
+service:
+  type: ClusterIP
+  ports:
+    http: 2020
+  nodePorts:
+    http: ""
+  extraPorts: []
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  clusterIP: ""
+  externalTrafficPolicy: Cluster
+  annotations: {}
+  sessionAffinity: None
+  sessionAffinityConfig: {}
+
+serviceAccount:
+  create: true
+  name: "devopscorner-fluent"
+  annotations: {}
+  automountServiceAccountToken: true
+
+podSecurityContext:
+  enabled: true
+  fsGroup: 1001
+
+containerSecurityContext:
+  enabled: true
+  runAsUser: 1001
+  runAsNonRoot: true
+  privileged: false
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: "RuntimeDefault"
+
+nodeSelector:
+  node: devopscorner-monitoring
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate: {}
+
+## Fluent Bit configuration
+config:
+  flush: 1
+  logLevel: info
+  service: |
+    [SERVICE]
+        Flush               1
+        Log_Level           info
+        Daemon              off
+        Parsers_File        parsers.conf
+        HTTP_Server         On
+        HTTP_Listen         0.0.0.0
+        HTTP_Port           2020
+        Health_Check        On
+
+  inputs: |
+    [INPUT]
+        Name                tail
+        Tag                 kube.*
+        Path                /var/log/containers/*.log
+        multiline.parser    docker, cri
+        Mem_Buf_Limit       10MB
+        Skip_Long_Lines     On
+        Refresh_Interval    10
+        Buffer_Chunk_Size   64KB
+        Buffer_Max_Size     128KB
+
+  # [INPUT]
+  #     Name                systemd
+  #     Path                /var/log/journal
+  #     Tag                 service.*
+  #     Systemd_Filter      _SYSTEMD_UNIT=containerd.service
+  #     Systemd_Filter      _SYSTEMD_UNIT=kubelet.service
+  #     Strip_Underscores   off
+  #     Read_From_Tail      On
+  #     Refresh_Interval    10
+
+  # [INPUT]
+  #     Name                systemd
+  #     Tag                 host.*
+  #     Systemd_Filter      _SYSTEMD_UNIT=kubelet.service
+  #     Read_From_Tail      On
+  #     Refresh_Interval    10
+
+  filters: |
+    [FILTER]
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+        Kube_Tag_Prefix     kube.var.log.containers.
+        Merge_Log           On
+        Merge_Log_Key       log_processed
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude Off
+        Buffer_Size         500KB
+
+  outputs: |
+    [OUTPUT]
+        Name                es
+        Match               kube.*
+        Host                opsearch-master.monitoring.svc
+        Port                9200
+        HTTP_User           admin
+        HTTP_Passwd         aw5cb2024
+        Logstash_Format     On
+        Logstash_Prefix     devopscorner-nonprod
+        Retry_Limit         Off
+        Replace_Dots        On
+        TLS                 On
+        TLS.verify          Off
+        Type                _doc
+        Time_Key            @timestamp
+        Index               devopscorner-nonprod
+        Suppress_Type_Name  On
+
+  upstream: {}
+
+  customParsers: |
+    [PARSER]
+        Name         docker_no_time
+        Format       json
+        Time_Keep    Off
+        Time_Key     time
+        Time_Format  %Y-%m-%dT%H:%M:%S.%L
+
+    [PARSER]
+        Name         apache
+        Format       regex
+        Regex        ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key     time
+        Time_Format  %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name         apache2
+        Format       regex
+        Regex        ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^ ]*) +\S*)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key     time
+        Time_Format  %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name         apache_error
+        Format       regex
+        Regex        ^\[[^ ]* (?<time>[^\]]*)\] \[(?<level>[^\]]*)\](?: \[pid (?<pid>[^\]]*)\])?( \[client (?<client>[^\]]*)\])? (?<message>.*)$
+
+    [PARSER]
+        Name         nginx
+        Format       regex
+        Regex        ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key     time
+        Time_Format  %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name         json
+        Format       json
+        Time_Key     time
+        Time_Format  %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name         docker
+        Format       json
+        Time_Key     time
+        Time_Format  %Y-%m-%dT%H:%M:%S.%L
+        Time_Keep    On
+
+    [PARSER]
+        Name         syslog
+        Format       regex
+        Regex        ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
+        Time_Key     time
+        Time_Format  %b %d %H:%M:%S
+
+  extraFiles: {}
+
+rbac:
+  create: true
+  nodeAccess: true
+  rules:
+    - apiGroups:
+        - ""
+      resources:
+        - namespaces
+        - pods
+      verbs:
+        - get
+        - list
+        - watch
+
+ingress:
+  enabled: false
+
+pdb:
+  create: false
+  minAvailable: ""
+  maxUnavailable: "50%"
+
+## Prometheus metrics
+metrics:
+  enabled: true
+  serviceMonitor:
+    ## @param metrics.serviceMonitor.enabled if `true`, creates a Prometheus Operator ServiceMonitor (also requires `metrics.enabled` to be `true`)
+    ##
+    enabled: true
+    ## @param metrics.serviceMonitor.namespace Namespace in which Prometheus is running
+    ##
+    namespace: "monitoring"
+    ## @param metrics.serviceMonitor.annotations [object] Additional custom annotations for the ServiceMonitor
+    ##
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "{{ .Values.service.ports.http }}"
+      prometheus.io/path: "/metrics"
+    ## @param metrics.serviceMonitor.labels Extra labels for the ServiceMonitor
+    ##
+    labels: {}
+    ## @param metrics.serviceMonitor.jobLabel The name of the label on the target service to use as the job name in Prometheus
+    ##
+    jobLabel: ""
+    ## @param metrics.serviceMonitor.honorLabels honorLabels chooses the metric's labels on collisions with target labels
+    ##
+    honorLabels: false
+    ## @param metrics.serviceMonitor.interval Interval at which metrics should be scraped.
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+    ## e.g:
+    ## interval: 10s
+    ##
+    interval: ""
+    ## @param metrics.serviceMonitor.scrapeTimeout Timeout after which the scrape is ended
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+    ## e.g:
+    ## scrapeTimeout: 10s
+    ##
+    scrapeTimeout: ""
+    ## @param metrics.serviceMonitor.metricRelabelings Specify additional relabeling of metrics
+    ##
+    metricRelabelings: []
+    ## @param metrics.serviceMonitor.relabelings Specify general relabeling
+    ##
+    relabelings: []
+    ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
+    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## selector:
+    ##   prometheus: my-prometheus
+    ##
+    selector: {}
+
+## @param extraDeploy Array of extra objects to deploy with the release
+##
+extraDeploy: []
+
+extraConfigMaps:
+  enable: false

@@ -1,0 +1,11 @@
+{{- if .Values.extraConfigMaps.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . }}-filter-lua
+  labels:
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+data:
+  filter.lua: |
+{{ .Values.extraConfigMaps.filterLua | indent 4 }}
+{{ end }}
