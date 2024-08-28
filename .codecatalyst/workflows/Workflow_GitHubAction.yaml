@@ -1,0 +1,114 @@
+Name: Workflow_GitHubActions_Deployment
+SchemaVersion: "1.0"
+
+# Optional - Set automatic triggers.
+Triggers:
+  - Type: PUSH
+    Branches:
+      - master
+      - "release/*"
+  - Type: PULLREQUEST
+    Branches:
+      - "features/*"
+      - "bugfix/*"
+      - "hotfix/*"
+    Events:
+      - OPEN
+      - REVISION
+
+# Required - Define action configurations.
+Actions:
+  GitHubActions_Deployment:
+    Identifier: aws/github-actions-runner@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+    Configuration:
+      Steps:
+        - name: Build Container GO Apps
+          run: |
+            GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            COMMIT_HASH=$(git log -1 --format=format:"%H")
+
+            latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            if [[ -z "$latestTag" ]]; then
+              latestTag=1.0.0
+            fi
+
+            if [[ "$GIT_BRANCH" == "features/"* ]]; then
+              semver="$latestTag-features.${COMMIT_HASH}"
+            elif [[ "$GIT_BRANCH" == "bugfix/"* ]]; then
+              semver="$latestTag-bugfix.${COMMIT_HASH}"
+            elif [[ "$GIT_BRANCH" == "hotfix/"* ]]; then
+              semver="$latestTag-beta.${COMMIT_HASH}"
+            else
+              semver="$latestTag.${COMMIT_HASH}"
+            fi
+
+            if [[ -z "$semver" ]]; then
+              ## DockerHub
+              ## ./dockerhub-build.sh Dockerfile devopscorner/golang-bedrock-codecatalyst alpine $COMMIT_HASH
+              ./ecr-build.sh "${Secrets.YOUR_AWS_ACCOUNT}" Dockerfile devopscorner/golang-bedrock-codecatalyst alpine $COMMIT_HASH
+            else
+              ## DockerHub
+              ## ./dockerhub-build.sh Dockerfile devopscorner/golang-bedrock-codecatalyst alpine $semver
+              ## ECR
+              ./ecr-build.sh "${Secrets.YOUR_AWS_ACCOUNT}" Dockerfile devopscorner/golang-bedrock-codecatalyst alpine $semver
+            fi
+        - name: List Container Images
+          run: |
+            docker images | grep "devopscorner/golang-bedrock-codecatalyst"
+        - name: Push to ECR (Container Registry)
+          run: |
+            ./ecr-push.sh "${Secrets.YOUR_AWS_ACCOUNT}" devopscorner/golang-bedrock-codecatalyst alpine
+        - name: Deploy to ECS
+          run: |
+            echo "Deploy to ECS cluster..."
+    Outputs:
+      Artifacts:
+      - Name: "MyArtifact"
+        Files:
+          - ".aws/**"
+          - ".codecatalyst/workflows/**"
+          - "src/**"
+          - "docker-compose.yaml"
+          - "Dockerfile"
+          - "dockerhub-build.sh"
+          - "dockerhub-push.sh"
+          - "dockerhub-tag.sh"
+          - "ecr-build.sh"
+          - "ecr-push.sh"
+          - "ecr-pull.sh"
+          - "ecr-tag.sh"
+          - "git-clone.sh"
+          - "Makefile"
+          - "README.md"
+          - "run-docker.sh"
+          - "start-build.sh"
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystPreviewDevelopmentAdministrator-5nxysr
+          Name: "YOUR_AWS_ACCOUNT"
+      Name: nonprod
+  DeployToECS:
+    DependsOn:
+      - GitHubActions_Deployment
+    Identifier: aws/ecs-deploy@v1
+    Environment:
+      Connections:
+        - Role: CodeCatalystPreviewDevelopmentAdministrator-5nxysr
+          Name: "YOUR_AWS_ACCOUNT"
+      Name: nonprod
+    Inputs:
+      Sources:
+        - WorkflowSource
+      Artifacts:
+        - MyArtifact
+    Configuration:
+      region: us-west-2
+      cluster: codecatalyst-ecs-cluster
+      service: golang-bedrock-ecs-service
+      task-definition: .codecatalyst/workflows/taskdef.json
