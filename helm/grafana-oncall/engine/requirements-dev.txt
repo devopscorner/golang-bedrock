@@ -6,7 +6,7 @@ asgiref==3.7.2
     #   django
 celery-types==0.18.0
     # via -r requirements-dev.in
-certifi==2024.2.2
+certifi==2024.7.4
     # via
     #   -c requirements.txt
     #   requests
@@ -52,7 +52,7 @@ httpretty==1.1.4
     # via -r requirements-dev.in
 identify==2.5.34
     # via pre-commit
-idna==3.6
+idna==3.7
     # via
     #   -c requirements.txt
     #   requests

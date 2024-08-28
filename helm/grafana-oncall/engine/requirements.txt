@@ -36,7 +36,7 @@ cachetools==4.2.2
     #   python-telegram-bot
 celery[redis]==5.3.1
     # via -r requirements.in
-certifi==2024.2.2
+certifi==2024.7.4
     # via
     #   python-telegram-bot
     #   requests
@@ -224,7 +224,7 @@ icalendar==5.0.10
     #   -r requirements.in
     #   recurring-ical-events
     #   x-wr-timezone
-idna==3.6
+idna==3.7
     # via requests
 importlib-metadata==6.11.0
     # via opentelemetry-api
