@@ -23,8 +23,8 @@ export ARCH="amd64"
 export VERSION="1.1.4"
 
 build_golang_bedrock() {
-    TAGS="3.20 \
-        alpine-3.20 \
+    TAGS="3.18 \
+        alpine-3.18 \
         alpine-latest \
         alpine \
         latest \
