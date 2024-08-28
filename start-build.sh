@@ -22,7 +22,7 @@ export ARCH="amd64"
 
 export VERSION="1.1.4"
 
-build_golang_adot() {
+build_golang_bedrock() {
     TAGS="3.20 \
         alpine-3.20 \
         alpine-latest \
@@ -49,33 +49,8 @@ build_golang_adot() {
     done
 }
 
-build_cicd_alpine_317() {
-    TAGS="cicd-alpine \
-        cicd-alpine-latest \
-        cicd-alpine-3.20 "
-
-    ### DockerHub Build Images ###
-    for TAG in $TAGS; do
-        echo " Build Image => $IMAGE:$TAG"
-        docker build \
-            -f Dockerfile-CICD.alpine-3.20-$ARCH \
-            -t $IMAGE:$TAG .
-        echo ''
-    done
-
-    ### ECR Build Images ###
-    for TAG in $TAGS; do
-        echo " Build Image => $ECR_IMAGE:$TAG"
-        docker build \
-            -f Dockerfile-CICD.alpine-3.20-$ARCH \
-            -t $ECR_IMAGE:$TAG .
-        echo ''
-    done
-}
-
 docker_build() {
-    build_golang_
-    build_cicd_alpine_317
+    build_golang_bedrock
 }
 
 docker_clean() {
