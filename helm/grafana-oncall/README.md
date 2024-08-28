@@ -34,10 +34,10 @@ We prepared multiple environments:
 - [developer](./dev/README.md)
 - hobby (described in the following steps)
 
-1. Download [`docker-compose.yml`](docker-compose.yml):
+1. Download [`docker-compose.yaml`](docker-compose.yaml):
 
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/grafana/oncall/dev/docker-compose.yml -o docker-compose.yml
+   curl -fsSL https://raw.githubusercontent.com/grafana/oncall/dev/docker-compose.yaml -o docker-compose.yaml
    ```
 
 2. Set variables:
@@ -57,7 +57,7 @@ We prepared multiple environments:
 
 3. (Optional) If you want to enable/setup the prometheus metrics exporter
 (besides the changes above), create a `prometheus.yml` file (replacing
-`my_random_prometheus_secret` accordingly), next to your `docker-compose.yml`:
+`my_random_prometheus_secret` accordingly), next to your `docker-compose.yaml`:
 
    ```bash
    echo "global:

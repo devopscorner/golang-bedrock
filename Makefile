@@ -26,8 +26,8 @@ DIR            = $(shell pwd)
 VERSION       ?= 1.7.0
 
 export BASE_IMAGE=alpine
-export BASE_VERSION=3.20
-export ALPINE_VERSION=3.20
+export BASE_VERSION=3.18
+export ALPINE_VERSION=3.18
 
 GO_APP        ?= golang-bedrock
 SOURCES        = $(shell find . -name '*.go' | grep -v /vendor/)
