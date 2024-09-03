@@ -7,7 +7,7 @@ ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API 
 [![tags](https://img.shields.io/github/v/tag/devopscorner/golang-bedrock?sort=semver)](https://github.com/devopscorner/golang-bedrock/releases)
 [![docker pulls](https://img.shields.io/docker/pulls/devopscorner/golang-bedrock.svg)](https://hub.docker.com/r/devopscorner/golang-bedrock/)
 ![download all](https://img.shields.io/github/downloads/devopscorner/golang-bedrock/total.svg)
-![download latest](https://img.shields.io/github/downloads/devopscorner/golang-bedrock/1.1.4/total)
+![download latest](https://img.shields.io/github/downloads/devopscorner/golang-bedrock/0.6/total)
 ![view](https://views.whatilearened.today/views/github/devopscorner/golang-bedrock.svg)
 ![clone](https://img.shields.io/badge/dynamic/json?color=success&label=clone&query=count&url=https://github.com/devopscorner/golang-bedrock/blob/master/clone.json?raw=True&logo=github)
 [![issues](https://img.shields.io/github/issues/devopscorner/golang-bedrock)](https://github.com/devopscorner/golang-bedrock/issues)
