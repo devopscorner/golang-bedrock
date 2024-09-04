@@ -55,6 +55,7 @@ ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API 
 ├── go.mod
 ├── go.sum
 ├── golang-bedrock.db
+├── .env.example
 ├── main.go
 ├── middleware
 │   └── auth_middleware.go
@@ -67,6 +68,7 @@ ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API 
 │   └── main_routes.go
 ├── utility
 │   ├── bedrock.go
+│   ├── genid.go
 │   ├── loki.go
 │   ├── otel.go
 │   ├── prometheus.go
@@ -76,7 +78,7 @@ ObservabilityAI: Memanfaatkan Amazon Bedrock Untuk Memantau Kinerja RESTful API 
     ├── file_view.go
     └── login_view.go
 
-11 directories, 28 files
+11 directories, 30 files
 ```
 
 ## Coverages:
