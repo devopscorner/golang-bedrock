@@ -14,7 +14,7 @@ const (
 	ERR_GENERATE_TOKEN                = "Failed to generate token"
 	ERR_GENERATE_REFRESH_TOKEN        = "Failed to generate refresh token"
 	ERR_MISSING_AUTH_HEADER           = "Missing authorization header"
-	ERR_FILE_NOT_FOUND                = "Book not found"
+	ERR_FILE_NOT_FOUND                = "File id not found"
 	ERR_UPDATE_FILE                   = "Failed to update file"
 	ERR_DELETE_FILE                   = "Failed to delete file"
 )

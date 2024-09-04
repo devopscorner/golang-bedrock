@@ -18,14 +18,24 @@ var lokiClient *loki.Client
 var lokiURL *url.URL
 
 func InitLokiLogger(cfg *config.Config) error {
+	if cfg.LokiEndpoint == "" {
+		return fmt.Errorf("❗ Loki endpoint is not configured")
+	}
+
 	var err error
 	lokiURL, err = url.Parse(cfg.LokiEndpoint)
 	if err != nil {
-		return fmt.Errorf("invalid Loki URL: %v", err)
+		return fmt.Errorf("❗ Invalid Loki URL: %v", err)
+	}
+
+	if lokiURL.Scheme == "" {
+		return fmt.Errorf("❗ Loki URL scheme is missing (e.g., http:// or https://)")
 	}
 
 	lokiConfig := loki.Config{
-		URL:       urlutil.URLValue{URL: lokiURL},
+		URL: urlutil.URLValue{
+			URL: lokiURL,
+		},
 		BatchWait: 1 * time.Second,
 		BatchSize: 1024 * 1024,
 		Timeout:   10 * time.Second,
@@ -33,7 +43,7 @@ func InitLokiLogger(cfg *config.Config) error {
 
 	client, err := loki.New(lokiConfig)
 	if err != nil {
-		return fmt.Errorf("failed to create Loki client: %v", err)
+		return fmt.Errorf("✗ Failed to create Loki client: %v", err)
 	}
 
 	lokiClient = client
@@ -42,7 +52,7 @@ func InitLokiLogger(cfg *config.Config) error {
 
 func LogWithLoki(ctx *gin.Context, level, message string, err error) {
 	if lokiClient == nil {
-		fmt.Println("Loki client not initialized")
+		fmt.Println("❗ Loki client not initialized")
 		return
 	}
 

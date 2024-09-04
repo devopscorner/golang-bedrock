@@ -51,7 +51,7 @@ func (r *fileRepository) FindByID(ctx context.Context, id string) (*model.FileUp
 	span.SetAttributes(attribute.String("file_id", id))
 
 	var file model.FileUpload
-	result := r.db.WithContext(ctx).First(&file, "id = ?", id)
+	result := r.db.WithContext(ctx).First(&file, "ID = ?", id)
 	if result.Error != nil {
 		utility.RecordError(ctx, result.Error)
 		return nil, result.Error
@@ -85,6 +85,7 @@ func (r *fileRepository) UpdateFile(ctx context.Context, file *model.FileUpload)
 		attribute.String("filename", file.FileName),
 		attribute.Int64("file_size", file.FileSize),
 		attribute.String("file_type", file.FileType),
+		attribute.String("analysis", file.Analysis),
 	)
 
 	result := r.db.WithContext(ctx).Save(file)
@@ -100,7 +101,7 @@ func (r *fileRepository) DeleteFile(ctx context.Context, id string) error {
 
 	span.SetAttributes(attribute.String("file_id", id))
 
-	result := r.db.WithContext(ctx).Delete(&model.FileUpload{}, "id = ?", id)
+	result := r.db.WithContext(ctx).Delete(&model.FileUpload{}, "ID = ?", id)
 	if result.Error != nil {
 		utility.RecordError(ctx, result.Error)
 	}

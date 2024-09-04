@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/devopscorner/golang-bedrock/src/model"
+	"github.com/devopscorner/golang-bedrock/src/utility"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,9 +24,28 @@ func ViewFindFileByID(ctx *gin.Context, viewFile *model.FileUpload) {
 }
 
 // POST /files
-// Create new file
-func ViewCreateFile(ctx *gin.Context, viewFile model.FileUpload) {
-	ctx.JSON(http.StatusCreated, gin.H{"data": viewFile})
+// ViewCreateFile includes metrics in the response
+func ViewCreateFile(c *gin.Context, file model.FileUpload, metrics utility.Metrics) {
+	c.JSON(http.StatusCreated, gin.H{
+		"data": gin.H{
+			"id":         file.ID,
+			"fileName":   file.FileName,
+			"fileSize":   file.FileSize,
+			"fileType":   file.FileType,
+			"fileURL":    file.FileURL,
+			"uploadedBy": file.UploadedBy,
+			"analysis":   file.Analysis,
+			"createdAt":  file.CreatedAt,
+			"updatedAt":  file.UpdatedAt,
+			"metrics": gin.H{
+				"totalLatency":    metrics.TotalLatency.String(),
+				"uploadLatency":   metrics.UploadLatency.String(),
+				"analysisLatency": metrics.AnalysisLatency.String(),
+				"inputTokens":     metrics.InputTokens,
+				"outputTokens":    metrics.OutputTokens,
+			},
+		},
+	})
 }
 
 // PUT /files/:id
