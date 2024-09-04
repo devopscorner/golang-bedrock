@@ -2,8 +2,10 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"mime/multipart"
+	"net/http"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -14,11 +16,15 @@ import (
 	"github.com/devopscorner/golang-bedrock/src/view"
 	"github.com/gin-gonic/gin"
 	validator "github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 )
 
-var fileTracer = otel.Tracer("file-controller")
+var (
+	fileTracer = otel.Tracer("file-controller")
+	log        = logrus.New()
+)
 
 type FileController struct {
 	repo     repository.FileRepository
@@ -30,54 +36,74 @@ func NewFileController(repo repository.FileRepository, s3Client *s3.Client) *Fil
 }
 
 func (fc *FileController) CreateFile(c *gin.Context) {
-	ctxTrace, span := fileTracer.Start(c.Request.Context(), "CreateFile")
+	ctx, span := fileTracer.Start(c.Request.Context(), "CreateFile")
 	defer span.End()
 
 	file, err := c.FormFile("file")
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, "Invalid file upload", err)
-		view.ErrorBadRequest(c, err)
+		fc.handleError(ctx, c, "Invalid file upload", err, http.StatusBadRequest)
 		return
 	}
 
-	filename := generateUniqueFilename(file.Filename)
+	fileID := utility.GenerateID()
+	filename := generateUniqueFilename(file.Filename, fileID)
 
-	s3URL, err := fc.uploadFileToS3(c, file, filename)
+	s3URL, err := fc.uploadFileToS3(ctx, file, filename)
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, "Failed to upload file to S3", err)
-		view.ErrorInternalServer(c, err)
+		fc.handleError(ctx, c, "Failed to upload file to S3", err, http.StatusInternalServerError)
 		return
 	}
 
 	fileUpload := model.FileUpload{
+		ID:         fileID,
 		FileName:   filename,
 		FileSize:   file.Size,
 		FileType:   file.Header.Get("Content-Type"),
 		FileURL:    s3URL,
-		UploadedBy: c.GetString("user"),
+		UploadedBy: "user1@example.com",
+		Analysis:   "",
 	}
 
 	validate := validator.New()
 	if err := validate.Struct(fileUpload); err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, "File validation failed", err)
-		view.ErrorBadRequest(c, err)
+		fc.handleError(ctx, c, "File validation failed", err, http.StatusBadRequest)
 		return
 	}
 
-	err = fc.repo.CreateFile(ctxTrace, &fileUpload)
+	err = fc.repo.CreateFile(ctx, &fileUpload)
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, "Failed to create file record", err)
-		view.ErrorInternalServer(c, err)
+		fc.handleError(ctx, c, "Failed to create file record", err, http.StatusInternalServerError)
 		return
 	}
 
 	utility.RecordFileUpload(fileUpload.FileType, float64(fileUpload.FileSize))
 
-	go fc.analyzeUploadWithBedrock(c, &fileUpload)
+	// Use a channel to handle the analysis result and metrics
+	resultChan := make(chan struct {
+		analysis string
+		metrics  utility.Metrics
+	})
+	go fc.analyzeUploadWithBedrock(context.Background(), &fileUpload, resultChan)
+
+	var analysisMetrics utility.Metrics
+	// Wait for the analysis result or timeout
+	select {
+	case result := <-resultChan:
+		fileUpload.Analysis = result.analysis
+		analysisMetrics = result.metrics
+		fc.logAnalysisMetrics(fileUpload.FileName, result.metrics)
+	case <-time.After(30 * time.Second):
+		fileUpload.Analysis = "Analysis timed out"
+		log.WithField("filename", fileUpload.FileName).Warn("Bedrock analysis timed out")
+	}
+
+	// Update the file with the analysis result
+	if err := fc.repo.UpdateFile(ctx, &fileUpload); err != nil {
+		log.WithFields(logrus.Fields{
+			"error":    err,
+			"filename": fileUpload.FileName,
+		}).Error("Failed to update file with analysis result")
+	}
 
 	span.SetAttributes(
 		attribute.String("filename", fileUpload.FileName),
@@ -85,54 +111,59 @@ func (fc *FileController) CreateFile(c *gin.Context) {
 		attribute.String("file_type", fileUpload.FileType),
 	)
 
-	utility.LogInfo(c, fmt.Sprintf("Created file: %s, Size: %d, Type: %s", fileUpload.FileName, fileUpload.FileSize, fileUpload.FileType))
-	view.ViewCreateFile(c, fileUpload)
+	log.WithFields(logrus.Fields{
+		"filename": fileUpload.FileName,
+		"size":     fileUpload.FileSize,
+		"type":     fileUpload.FileType,
+	}).Info("Created file")
+
+	// Pass the metrics to the view function
+	view.ViewCreateFile(c, fileUpload, analysisMetrics)
 }
 
 func (fc *FileController) FindAll(c *gin.Context) {
-	ctxTrace, span := fileTracer.Start(c.Request.Context(), "FindAll")
+	ctx, span := fileTracer.Start(c.Request.Context(), "FindAll")
 	defer span.End()
 
-	files, err := fc.repo.FindAll(ctxTrace)
+	files, err := fc.repo.FindAll(ctx)
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, "Failed to find files", err)
-		view.ErrorInternalServer(c, err)
+		fc.handleError(ctx, c, "Failed to find files", err, http.StatusInternalServerError)
 		return
 	}
 
 	span.SetAttributes(attribute.Int("file_count", len(files)))
 
-	utility.LogInfo(c, fmt.Sprintf("Retrieved %d files", len(files)))
+	log.WithFields(logrus.Fields{
+		"count": len(files),
+	}).Info("Retrieved files")
 	view.ViewFindAllFiles(c, files)
 }
 
 func (fc *FileController) FindByID(c *gin.Context) {
-	ctxTrace, span := fileTracer.Start(c.Request.Context(), "FindByID")
+	ctx, span := fileTracer.Start(c.Request.Context(), "FindByID")
 	defer span.End()
 
 	id := c.Param("id")
 	span.SetAttributes(attribute.String("file_id", id))
 
-	file, err := fc.repo.FindByID(ctxTrace, id)
+	file, err := fc.repo.FindByID(ctx, id)
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, fmt.Sprintf("Failed to find file: %s", id), err)
-		view.ErrorInternalServer(c, err)
+		fc.handleError(ctx, c, "Failed to find file", err, http.StatusInternalServerError)
 		return
 	}
 	if file == nil {
-		utility.LogWarn(c, fmt.Sprintf("File not found: %s", id))
-		view.ErrorNotFound(c)
+		fc.handleError(ctx, c, "File not found", nil, http.StatusNotFound)
 		return
 	}
 
-	utility.LogInfo(c, fmt.Sprintf("Retrieved file: %s", id))
+	log.WithFields(logrus.Fields{
+		"id": id,
+	}).Info("Retrieved file")
 	view.ViewFindFileByID(c, file)
 }
 
 func (fc *FileController) UpdateFile(c *gin.Context) {
-	ctxTrace, span := fileTracer.Start(c.Request.Context(), "UpdateFile")
+	ctx, span := fileTracer.Start(c.Request.Context(), "UpdateFile")
 	defer span.End()
 
 	id := c.Param("id")
@@ -140,17 +171,13 @@ func (fc *FileController) UpdateFile(c *gin.Context) {
 
 	var input model.FileUpload
 	if err := c.ShouldBindJSON(&input); err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, "Invalid input for file update", err)
-		view.ErrorBadRequest(c, err)
+		fc.handleError(ctx, c, "Invalid input for file update", err, http.StatusBadRequest)
 		return
 	}
 
-	file, err := fc.repo.FindByID(c, id)
+	file, err := fc.repo.FindByID(ctx, id)
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, fmt.Sprintf("Failed to find file for update: %s", id), err)
-		view.ErrorNotFound(c)
+		fc.handleError(ctx, c, "Failed to find file for update", err, http.StatusNotFound)
 		return
 	}
 
@@ -159,65 +186,115 @@ func (fc *FileController) UpdateFile(c *gin.Context) {
 	file.FileType = input.FileType
 	file.FileURL = input.FileURL
 	file.UploadedBy = input.UploadedBy
+	file.Analysis = input.Analysis
 
-	if err := fc.repo.UpdateFile(c, file); err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, fmt.Sprintf("Failed to update file: %s", id), err)
-		view.ErrorInternalServer(c, err)
+	if err := fc.repo.UpdateFile(ctx, file); err != nil {
+		fc.handleError(ctx, c, "Failed to update file", err, http.StatusInternalServerError)
 		return
 	}
 
-	utility.LogInfo(c, fmt.Sprintf("Updated file: %s", id))
+	log.WithFields(logrus.Fields{
+		"id": id,
+	}).Info("Updated file")
 	view.ViewUpdateFile(c, file)
 }
 
 func (fc *FileController) DeleteFile(c *gin.Context) {
-	ctxTrace, span := fileTracer.Start(c.Request.Context(), "DeleteFile")
+	ctx, span := fileTracer.Start(c.Request.Context(), "DeleteFile")
 	defer span.End()
 
 	id := c.Param("id")
 	span.SetAttributes(attribute.String("file_id", id))
 
-	if err := fc.repo.DeleteFile(c, id); err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, fmt.Sprintf("Failed to delete file: %s", id), err)
-		view.ErrorInternalServer(c, err)
+	if err := fc.repo.DeleteFile(ctx, id); err != nil {
+		fc.handleError(ctx, c, "Failed to delete file", err, http.StatusInternalServerError)
 		return
 	}
 
-	utility.LogInfo(c, fmt.Sprintf("Deleted file: %s", id))
+	log.WithFields(logrus.Fields{
+		"id": id,
+	}).Info("Deleted file")
 	view.ViewDeleteFile(c)
 }
 
-func (fc *FileController) uploadFileToS3(c *gin.Context, file *multipart.FileHeader, filename string) (string, error) {
-	ctxTrace, span := fileTracer.Start(c, "uploadFileToS3")
+func (fc *FileController) uploadFileToS3(ctx context.Context, file *multipart.FileHeader, filename string) (string, error) {
+	ctx, span := fileTracer.Start(ctx, "uploadFileToS3")
 	defer span.End()
 
 	f, err := file.Open()
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		return "", err
+		return "", fmt.Errorf("failed to open file: %w", err)
 	}
 	defer f.Close()
 
-	return utility.UploadFileToS3(c, fc.s3Client, config.AWSBucketName(), filename, f)
+	return utility.UploadFileToS3(ctx, fc.s3Client, config.AWSBucketName(), filename, f)
 }
 
-func (fc *FileController) analyzeUploadWithBedrock(c *gin.Context, fileInfo *model.FileUpload) {
-	ctxTrace, span := fileTracer.Start(c, "analyzeUploadWithBedrock")
+func (fc *FileController) analyzeUploadWithBedrock(ctx context.Context, fileInfo *model.FileUpload, resultChan chan<- struct {
+	analysis string
+	metrics  utility.Metrics
+}) {
+	ctx, cancel := context.WithTimeout(ctx, 25*time.Second)
+	defer cancel()
+
+	_, span := fileTracer.Start(ctx, "analyzeUploadWithBedrock")
 	defer span.End()
 
-	analysis, err := utility.AnalyzeWithBedrock(c, fmt.Sprintf("Analyze this file upload: Filename: %s, Size: %d bytes, Type: %s", fileInfo.FileName, fileInfo.FileSize, fileInfo.FileType))
+	analysis, metrics, err := utility.AnalyzeWithBedrock(ctx, fmt.Sprintf("Analyze this file upload: Filename: %s, Size: %d bytes, Type: %s", fileInfo.FileName, fileInfo.FileSize, fileInfo.FileType))
 	if err != nil {
-		utility.RecordError(ctxTrace, err)
-		utility.LogError(c, "Failed to analyze upload with Bedrock", err)
-		return
+		log.WithFields(logrus.Fields{
+			"error":    err,
+			"filename": fileInfo.FileName,
+		}).Error("Failed to analyze upload with Bedrock")
+		analysis = fc.getErrorAnalysis(err)
 	}
 
 	span.SetAttributes(attribute.String("analysis_result", analysis))
-	utility.LogInfo(c, fmt.Sprintf("Bedrock analysis completed for file: %s. Result: %s", fileInfo.FileName, analysis))
+	log.WithFields(logrus.Fields{
+		"filename": fileInfo.FileName,
+		"analysis": analysis,
+	}).Info("Bedrock analysis completed for file")
+
+	resultChan <- struct {
+		analysis string
+		metrics  utility.Metrics
+	}{analysis, metrics}
 }
 
-func generateUniqueFilename(originalFilename string) string {
-	return fmt.Sprintf("%d_%s", time.Now().UnixNano(), originalFilename)
+func (fc *FileController) getErrorAnalysis(err error) string {
+	switch {
+	case err.Error() == "Bedrock model not found. Please check your model ID and permissions":
+		return "Analysis failed: Bedrock model not found. Please check configuration."
+	case err.Error() == "Access denied to Bedrock model. Please check your IAM permissions":
+		return "Analysis failed: Access denied to Bedrock model. Please check permissions."
+	case err.Error() == "Invalid input for Bedrock model":
+		return "Analysis failed: Invalid input for Bedrock model."
+	case err.Error() == "Bedrock analysis timed out":
+		return "Analysis failed: Bedrock request timed out."
+	default:
+		return "Analysis failed due to an error with Bedrock."
+	}
+}
+
+func (fc *FileController) logAnalysisMetrics(filename string, metrics utility.Metrics) {
+	log.WithFields(logrus.Fields{
+		"filename":        filename,
+		"totalLatency":    metrics.TotalLatency,
+		"uploadLatency":   metrics.UploadLatency,
+		"analysisLatency": metrics.AnalysisLatency,
+		"inputTokens":     metrics.InputTokens,
+		"outputTokens":    metrics.OutputTokens,
+	}).Info("Bedrock analysis metrics")
+}
+
+func (fc *FileController) handleError(ctx context.Context, c *gin.Context, message string, err error, statusCode int) {
+	utility.RecordError(ctx, err)
+	log.WithFields(logrus.Fields{
+		"error": err,
+	}).Error(message)
+	view.ErrorResponse(c, statusCode, message)
+}
+
+func generateUniqueFilename(originalFilename string, fileId string) string {
+	return fmt.Sprintf("%s_%s", fileId, originalFilename)
 }

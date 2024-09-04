@@ -69,3 +69,7 @@ func ErrorUpdate(ctx *gin.Context) {
 func ErrorDelete(ctx *gin.Context) {
 	ctx.JSON(http.StatusInternalServerError, gin.H{"error": config.ERR_DELETE_FILE})
 }
+
+func ErrorResponse(ctx *gin.Context, statusCode int, message string) {
+	ctx.JSON(statusCode, gin.H{"error": message})
+}

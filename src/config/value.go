@@ -149,6 +149,27 @@ func AWSBucketName() string {
 	return config.AWSBucketName
 }
 
+func AmazonBedrockAgentId() string {
+	config := &Config{
+		AmazonBedrockAgentId: viper.GetString("AMAZON_BEDROCK_AGENT_ID"),
+	}
+	return config.AmazonBedrockAgentId
+}
+
+func AmazonBedrockModelId() string {
+	config := &Config{
+		AmazonBedrockModelId: viper.GetString("AMAZON_BEDROCK_MODEL_ID"),
+	}
+	return config.AmazonBedrockModelId
+}
+
+func AmazonBedrockVersion() string {
+	config := &Config{
+		AmazonBedrockVersion: viper.GetString("AMAZON_BEDROCK_VERSION"),
+	}
+	return config.AmazonBedrockVersion
+}
+
 // -----------------------------------
 // OPENSEARCH
 // -----------------------------------
@@ -327,7 +348,7 @@ func OtelTotalHeapSizeUpperBound() int64 {
 
 func OtelThreadsActiveUpperBound() int64 {
 	config := &Config{
-		OtelThreadsActiveUpperBound: viper.GetInt64("OTEL_RANDOM_THREAD_ACTIVE_UPPOR_BOUND"),
+		OtelThreadsActiveUpperBound: viper.GetInt64("OTEL_RANDOM_THREAD_ACTIVE_UPPER_BOUND"),
 	}
 	return config.OtelThreadsActiveUpperBound
 }

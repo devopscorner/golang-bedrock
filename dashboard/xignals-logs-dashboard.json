@@ -1,0 +1,1797 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana-opensearch-datasource",
+          "uid": "${datasource}"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Xignals Logs (xignals-logs-*) Filter",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 5,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": ["opensearch", "xignals", "prometheus", "cluster"],
+      "targetBlank": true,
+      "title": "Xignals Cluster",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Summary",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the total number of ingestions over time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "thresholds"
+          },
+          "displayName": "Total",
+          "links": [
+            {
+              "title": "Status-ALL",
+              "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=&var-datasource=adqd3v1qncnb4c"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5e5eaa",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 100000
+              },
+              {
+                "color": "red",
+                "value": 1000000
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 13,
+      "links": [
+        {
+          "title": "Status-ALL",
+          "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=&var-datasource=adqd3v1qncnb4c"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": true,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "FILTERS",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "${Query}",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Total Ingestions @ Time",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the total number of ingestions over time for the \"INFO\" status.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "links": [
+            {
+              "title": "Status-INFO",
+              "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=info&var-datasource=adqd3v1qncnb4c"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 10,
+      "links": [
+        {
+          "title": "Status-INFO",
+          "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=info&var-datasource=adqd3v1qncnb4c"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "INFO",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "info",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Status INFO @ Time",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "INFO"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the total number of ingestions over time for the \"ERROR\" status.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "links": [
+            {
+              "title": "Status-ERROR",
+              "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=error&var-datasource=adqd3v1qncnb4c"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 11,
+      "links": [
+        {
+          "title": "Status-ERROR",
+          "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=error&var-datasource=adqd3v1qncnb4c"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "ERROR",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "error",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Status ERROR @ Time",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "ERROR"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the total number of ingestions over time for the \"DEBUG\" status.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-blue",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "links": [
+            {
+              "title": "Status-DEBUG",
+              "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=&var-datasource=adqd3v1qncnb4c&var-Filters=log%7C%21~%7Cinfo&var-Filters=log%7C%21~%7Cerror"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 37,
+      "links": [
+        {
+          "title": "Status-DEBUG",
+          "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=&var-datasource=adqd3v1qncnb4c&var-Filters=log%7C%21~%7Cinfo&var-Filters=log%7C%21~%7Cerror"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "DEBUG",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "!(info) OR !(error) OR !(warning) OR !(critical) OR !(trace)",
+          "queryType": "lucene",
+          "refId": "C",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Status DEBUG @ Time",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "DEBUG"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the total number of ingestions over time for the \"WARNING\" status.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "links": [
+            {
+              "title": "Status-INFO",
+              "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=warning&var-datasource=adqd3v1qncnb4c"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 5
+      },
+      "id": 31,
+      "links": [
+        {
+          "title": "Status-INFO",
+          "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=warning&var-datasource=adqd3v1qncnb4c"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "WARNING",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "warning",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Status WARNING @ Time",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "INFO"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the total number of ingestions over time for the \"CRITICAL\" status.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "links": [
+            {
+              "title": "Status-INFO",
+              "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=critical&var-datasource=adqd3v1qncnb4c"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 5
+      },
+      "id": 30,
+      "links": [
+        {
+          "title": "Status-INFO",
+          "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=critical&var-datasource=adqd3v1qncnb4c"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "CRITICAL",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "critical",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Status CRITICAL @ Time",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "INFO"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the total number of ingestions over time for the \"TRACE\" status.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "super-light-blue",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "links": [
+            {
+              "title": "Status-INFO",
+              "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=trace&var-datasource=adqd3v1qncnb4c"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "super-light-blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 5
+      },
+      "id": 32,
+      "links": [
+        {
+          "title": "Status-INFO",
+          "url": "https://console.awscb.id/d/xignals-log/nonprod-xignals-log?orgId=1&refresh=1m&var-Query=trace&var-datasource=adqd3v1qncnb4c"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "TRACE",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "trace",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Status TRACE @ Time",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "INFO"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 7,
+      "panels": [],
+      "title": "Stream Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel titled \"Panel Title\" displays a table format of counts over time. It uses the \"Xignals Logs\" datasource and is part of the \"Xignals EMI\" dashboard.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 25,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 100000
+              },
+              {
+                "color": "red",
+                "value": 1000000
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 0,
+        "y": 10
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "right",
+          "showLegend": false
+        },
+        "timezone": ["browser"],
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "alias": "FILTERS",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "${Query}",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Ingestion Logs - Graph",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "This panel displays the count of INFO, ERROR, and DEBUG log messages over time for non-production environments.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "gauge"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "applyToRow": true,
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "INFO"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ERROR"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DEBUG"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WARNING"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CRITICAL"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TRACE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 10
+      },
+      "id": 34,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": true
+        },
+        "frameIndex": 0,
+        "showHeader": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "INFO",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "info",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        },
+        {
+          "alias": "ERROR",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "error",
+          "queryType": "lucene",
+          "refId": "B",
+          "timeField": "@timestamp"
+        },
+        {
+          "alias": "DEBUG",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "!(info) OR !(error) OR !(warning) OR !(critical) OR !(trace)",
+          "queryType": "lucene",
+          "refId": "D",
+          "timeField": "@timestamp"
+        },
+        {
+          "alias": "WARNING",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "warning",
+          "queryType": "lucene",
+          "refId": "C",
+          "timeField": "@timestamp"
+        },
+        {
+          "alias": "CRITICAL",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "critical",
+          "queryType": "lucene",
+          "refId": "E",
+          "timeField": "@timestamp"
+        },
+        {
+          "alias": "TRACE",
+          "bucketAggs": [
+            {
+              "field": "${Filters}",
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "trace",
+          "queryType": "lucene",
+          "refId": "F",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Ingestion Logs - Hits",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Stream Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "Displays a detailed log index segmented by information, error, and debug levels with time-based histograms.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "json-view"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "@timestamp"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "json-view"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 35,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "@timestamp"
+          }
+        ]
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "INFO",
+          "bucketAggs": [
+            {
+              "field": "@timestamp",
+              "id": "3",
+              "settings": {
+                "min_doc_count": "0",
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "${Filters}",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "logs"
+            }
+          ],
+          "query": "${Query}",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Logs Index",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "byVariable": false,
+            "include": {
+              "names": ["@timestamp", "traceId"]
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-opensearch-datasource",
+        "uid": "${datasource}"
+      },
+      "description": "Displays detailed logs with timestamps to monitor and assess system activities within the non-production environment.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "transparent",
+            "mode": "shades"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "applyToRow": false,
+              "type": "color-background"
+            },
+            "filterable": true,
+            "inspect": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "@timestamp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 226
+              },
+              {
+                "id": "unit",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_source"
+            },
+            "properties": [
+              {
+                "id": "custom.width"
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.inspect",
+                "value": true
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "json-view"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "\\s+level=(info)",
+                      "result": {
+                        "color": "green",
+                        "index": 0,
+                        "text": "info"
+                      }
+                    },
+                    "type": "regex"
+                  },
+                  {
+                    "options": {
+                      "pattern": "\\s+level=(warn)",
+                      "result": {
+                        "color": "orange",
+                        "index": 1,
+                        "text": "warn"
+                      }
+                    },
+                    "type": "regex"
+                  },
+                  {
+                    "options": {
+                      "pattern": "\\s+level=(error)",
+                      "result": {
+                        "color": "red",
+                        "index": 2,
+                        "text": "error"
+                      }
+                    },
+                    "type": "regex"
+                  },
+                  {
+                    "options": {
+                      "pattern": "\\s+level=(debug)",
+                      "result": {
+                        "color": "blue",
+                        "index": 3,
+                        "text": "debug"
+                      }
+                    },
+                    "type": "regex"
+                  },
+                  {
+                    "options": {
+                      "pattern": "\\s+level=(critical)",
+                      "result": {
+                        "color": "purple",
+                        "index": 4,
+                        "text": "critical"
+                      }
+                    },
+                    "type": "regex"
+                  },
+                  {
+                    "options": {
+                      "pattern": "\\s+level=(trace)",
+                      "result": {
+                        "color": "yellow",
+                        "index": 5,
+                        "text": "trace"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 36,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": true,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "min_doc_count": "0",
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "${Filters}",
+              "id": "1",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "0",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "grafana-opensearch-datasource",
+            "uid": "${datasource}"
+          },
+          "format": "table",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "logs"
+            }
+          ],
+          "query": "${Query}",
+          "queryType": "lucene",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "Logs Detail",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {
+              "@timestamp": true,
+              "_id": false,
+              "_index": false,
+              "_source": true,
+              "kubernetes.container_hash": false,
+              "log": true
+            },
+            "indexByName": {
+              "@timestamp": 0,
+              "_id": 2,
+              "_index": 4,
+              "_p": 5,
+              "_source": 1,
+              "_type": 6,
+              "kubernetes.annotations.checksum/config": 7,
+              "kubernetes.annotations.checksum/sc-dashboard-provider-config": 8,
+              "kubernetes.annotations.checksum/secret": 9,
+              "kubernetes.annotations.cluster-autoscaler_kubernetes_io/safe-to-evict": 10,
+              "kubernetes.annotations.kubectl_kubernetes_io/default-container": 11,
+              "kubernetes.annotations.kubectl_kubernetes_io/restartedAt": 12,
+              "kubernetes.annotations.prometheus_io/port": 13,
+              "kubernetes.annotations.prometheus_io/scrape": 14,
+              "kubernetes.container_hash": 15,
+              "kubernetes.container_image": 16,
+              "kubernetes.container_name": 17,
+              "kubernetes.docker_id": 18,
+              "kubernetes.host": 19,
+              "kubernetes.labels.app": 20,
+              "kubernetes.labels.app_kubernetes_io/component": 21,
+              "kubernetes.labels.app_kubernetes_io/instance": 22,
+              "kubernetes.labels.app_kubernetes_io/managed-by": 23,
+              "kubernetes.labels.app_kubernetes_io/name": 24,
+              "kubernetes.labels.app_kubernetes_io/part-of": 25,
+              "kubernetes.labels.app_kubernetes_io/version": 26,
+              "kubernetes.labels.apps_kubernetes_io/pod-index": 27,
+              "kubernetes.labels.controller-revision-hash": 28,
+              "kubernetes.labels.helm_sh/chart": 29,
+              "kubernetes.labels.pod-template-hash": 30,
+              "kubernetes.labels.role": 31,
+              "kubernetes.labels.statefulset_kubernetes_io/pod-name": 32,
+              "kubernetes.namespace_name": 33,
+              "kubernetes.pod_id": 34,
+              "kubernetes.pod_name": 35,
+              "log": 3,
+              "stream": 36,
+              "time": 37
+            },
+            "renameByName": {
+              "@timestamp": "Time",
+              "_source": "_source",
+              "log": "Log"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 39,
+  "tags": ["opensearch", "log", "xignals", "kubernetes", "prometheus", "alva"],
+  "templating": {
+    "list": [
+      {
+        "datasource": {
+          "type": "grafana-opensearch-datasource",
+          "uid": "${datasource}"
+        },
+        "description": "",
+        "filters": [],
+        "hide": 0,
+        "name": "Filters",
+        "skipUrlSync": false,
+        "type": "adhoc"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "name": "Query",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "OpenSearch",
+          "value": "P9744FCCEAAFBD98F"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "grafana-opensearch-datasource",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "^OpenSearch",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "[NONPROD] XIGNALS / LOG / XIGNALS-OTEL",
+  "uid": "xignals-log-otel",
+  "version": 6,
+  "weekStart": ""
+}

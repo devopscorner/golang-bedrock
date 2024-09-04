@@ -265,7 +265,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"devopscorner\",\n    \"password\": \"DevOpsCorner2024\"\n}"
+					"raw": "{\n    \"username\": \"devopscorner-user\",\n    \"password\": \"DevOpsCorner2024\"\n}"
 				},
 				"url": {
 					"raw": "{{api_url}}:8080/login",
@@ -313,7 +313,7 @@
 			"response": []
 		},
 		{
-			"name": "Find Uploaded File Id",
+			"name": "Find Uploaded File Id 1",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -329,7 +329,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{api_url}}:8080/v1/files/1724454386171356000",
+					"raw": "{{api_url}}:8080/v1/files/1725417360394229000",
 					"host": [
 						"{{api_url}}"
 					],
@@ -337,7 +337,71 @@
 					"path": [
 						"v1",
 						"files",
-						"1724454386171356000"
+						"1725417360394229000"
+					]
+				},
+				"description": "localhost:8080/books"
+			},
+			"response": []
+		},
+		{
+			"name": "Find Uploaded File Id 2",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_url}}:8080/v1/files/1725383792358030000",
+					"host": [
+						"{{api_url}}"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"files",
+						"1725383792358030000"
+					]
+				},
+				"description": "localhost:8080/books"
+			},
+			"response": []
+		},
+		{
+			"name": "Find Uploaded File Id 3",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_url}}:8080/v1/files/1725417214616798000",
+					"host": [
+						"{{api_url}}"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"files",
+						"1725417214616798000"
 					]
 				},
 				"description": "localhost:8080/books"
@@ -361,8 +425,24 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"FileName\": \"document1.pdf\",\n    \"FileSize\": \"1024 * 1024\",\n    \"FileType\": \"application/pdf\",\n    \"UploadedBy\": \"user1@example.com\"\n}"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "FileType",
+							"value": "application/pdf",
+							"type": "text"
+						},
+						{
+							"key": "UploadedBy",
+							"value": "user1@example.com",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/dfdenni/Desktop/Learning-DevOps.pdf"
+						}
+					]
 				},
 				"url": {
 					"raw": "{{api_url}}:8080/v1/files",
@@ -377,7 +457,76 @@
 				},
 				"description": "localhost:8080/books"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Example Result File 1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "FileType",
+									"value": "application/pdf",
+									"type": "text"
+								},
+								{
+									"key": "UploadedBy",
+									"value": "user1@example.com",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/dfdenni/Desktop/Learning-DevOps.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}:8080/v1/files",
+							"host": [
+								"{{api_url}}"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"files"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 04 Sep 2024 02:26:53 GMT"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"analysis\": \"Based on the information provided, here's an analysis of the file upload:\\n\\n1. **Filename**: `1725416786086072000_Learning-DevOps.pdf`\\n   - The filename suggests that it is a PDF file related to learning DevOps.\\n   - The filename contains a long numerical sequence (`1725416786086072000`) before the descriptive part (`Learning-DevOps.pdf`). This numerical sequence could be a unique identifier, timestamp, or some other form of file naming convention.\\n\\n2. **File Size**: `19141577 bytes`\\n   - The file size is approximately 19.14 MB (megabytes).\\n   - For a PDF file, this size is relatively large, indicating that the file may contain a substantial amount of content, such as text, images, or other embedded media.\\n\\n3. **File Type**: `application/pdf`\\n   - The file type is a Portable Document Format (PDF), which is a widely used format for sharing documents across different platforms and devices.\\n   - PDF files can contain text, images, multimedia, and interactive elements, making them suitable for various purposes, including educational materials, manuals, reports, and presentations.\\n\\nBased on the filename and file type, it appears that this file is likely a PDF document related to learning DevOps practices. The relatively large file size suggests that it may contain extensive content, potentially including text, diagrams, or other multimedia elements.\\n\\nPDF files are generally considered safe for sharing and viewing, as long as they are obtained from trusted sources and opened with updated PDF viewers or readers. However, it's always a good practice to scan files for potential security risks before opening them, especially if they come from untrusted sources.\",\n        \"createdAt\": \"2024-09-04T09:26:43.750343+07:00\",\n        \"fileName\": \"1725416786086072000_Learning-DevOps.pdf\",\n        \"fileSize\": 19141577,\n        \"fileType\": \"application/pdf\",\n        \"fileURL\": \"https://example.s3.amazonaws.com/1725416786086072000_Learning-DevOps.pdf\",\n        \"id\": \"1725416786086072000\",\n        \"metrics\": {\n            \"analysisLatency\": \"9.313159125s\",\n            \"inputTokens\": 30,\n            \"outputTokens\": 419,\n            \"totalLatency\": \"9.314087583s\",\n            \"uploadLatency\": \"610.458µs\"\n        },\n        \"updatedAt\": \"2024-09-04T09:26:53.071124+07:00\",\n        \"uploadedBy\": \"user1@example.com\"\n    }\n}"
+				}
+			]
 		},
 		{
 			"name": "Upload File 2",
@@ -396,8 +545,24 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"FileName\": \"image1.jpg\",\n    \"FileSize\": \"512 * 1024\",\n    \"FileType\": \"image/jpeg\",\n    \"UploadedBy\": \"user2@example.com\"\n}"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "FileType",
+							"value": "application/pdf",
+							"type": "text"
+						},
+						{
+							"key": "UploadedBy",
+							"value": "user1@example.com",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/dfdenni/Desktop/Learning-DevOps.pdf"
+						}
+					]
 				},
 				"url": {
 					"raw": "{{api_url}}:8080/v1/files",
@@ -431,8 +596,24 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"FileName\": \"spreadsheet1.xlsx\",\n    \"FileSize\": \"2048 * 1024\",\n    \"FileType\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n    \"UploadedBy\": \"user3@example.com\"\n}"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "FileType",
+							"value": "application/pdf",
+							"type": "text"
+						},
+						{
+							"key": "UploadedBy",
+							"value": "user1@example.com",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/dfdenni/Desktop/Learning-DevOps.pdf"
+						}
+					]
 				},
 				"url": {
 					"raw": "{{api_url}}:8080/v1/files",
@@ -467,10 +648,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"FileName\": \"document2.pdf\",\n    \"FileSize\": \"2048 * 2048\",\n    \"FileType\": \"application/pdf\",\n    \"UploadedBy\": \"user1@example.com\"\n}"
+					"raw": "{\n    \"fileName\": \"1725386092471912000_Learning-DevOps.pdf\",\n    \"fileSize\": 19141577,\n    \"fileType\": \"application/pdf\",\n    \"fileURL\": \"https://example.s3.amazonaws.com/1725386092471912000_Learning-DevOps.pdf\",\n    \"uploadedBy\": \"user2@example.com\",\n    \"analysis\": \"Analysis failed: Bedrock model not found. Please check configuration.\"\n}"
 				},
 				"url": {
-					"raw": "{{api_url}}:8080/v1/files/1724454386171356000",
+					"raw": "{{api_url}}:8080/v1/files/1725383792358030000",
 					"host": [
 						"{{api_url}}"
 					],
@@ -478,7 +659,7 @@
 					"path": [
 						"v1",
 						"files",
-						"1724454386171356000"
+						"1725383792358030000"
 					]
 				},
 				"description": "localhost:8080/books/3"
@@ -502,7 +683,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{api_url}}:8080/v1/files/1724454386171356000",
+					"raw": "{{api_url}}:8080/v1/files/1725383792358030000",
 					"host": [
 						"{{api_url}}"
 					],
@@ -510,7 +691,7 @@
 					"path": [
 						"v1",
 						"files",
-						"1724454386171356000"
+						"1725383792358030000"
 					]
 				},
 				"description": "localhost:8080/books/3"

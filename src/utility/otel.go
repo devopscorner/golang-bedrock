@@ -34,33 +34,34 @@ func InitTracer(cfg *config.Config) func() {
 
 	switch strings.ToLower(cfg.OtelTraceName) {
 	case "jaeger":
-		log.Println("Jaeger tracing is not implemented in this example")
-		return func() {}
+		log.Println("❗ Jaeger tracing is not implemented. Falling back to OTLP HTTP exporter.")
+		fallthrough
 	case "xray":
-		log.Println("X-Ray tracing is not implemented in this example")
+		log.Println("❗ X-Ray tracing is not implemented in this example")
 		return func() {}
+	case "otlphttp":
+		exporter, err = otlptracehttp.New(ctx,
+			otlptracehttp.WithEndpoint(fmt.Sprintf("%s:%d", cfg.OtelOtlpEndpoint, cfg.OtelOtlpPort)),
+			otlptracehttp.WithInsecure(),
+		)
+	case "otlpgrpc":
+		exporter, err = otlptrace.New(
+			ctx,
+			otlptracegrpc.NewClient(
+				otlptracegrpc.WithEndpoint(fmt.Sprintf("%s:%d", cfg.OtelOtlpEndpoint, cfg.OtelOtlpPort)),
+				otlptracegrpc.WithInsecure(),
+			),
+		)
 	default:
-		// OTLP exporter setup
-		if strings.HasPrefix(cfg.OtelOtlpEndpoint, "http") {
-			// HTTP exporter
-			exporter, err = otlptracehttp.New(ctx,
-				otlptracehttp.WithEndpoint(fmt.Sprintf("%s:%d", cfg.OtelOtlpEndpoint, cfg.OtelOtlpPort)),
-				otlptracehttp.WithInsecure(),
-			)
-		} else {
-			// gRPC exporter
-			exporter, err = otlptrace.New(
-				ctx,
-				otlptracegrpc.NewClient(
-					otlptracegrpc.WithEndpoint(fmt.Sprintf("%s:%d", cfg.OtelOtlpEndpoint, cfg.OtelOtlpPort)),
-					otlptracegrpc.WithInsecure(),
-				),
-			)
-		}
+		log.Printf("❗ Unknown tracer: %s. Falling back to OTLP HTTP exporter.", cfg.OtelTraceName)
+		exporter, err = otlptracehttp.New(ctx,
+			otlptracehttp.WithEndpoint(fmt.Sprintf("%s:%d", cfg.OtelOtlpEndpoint, cfg.OtelOtlpPort)),
+			otlptracehttp.WithInsecure(),
+		)
+	}
 
-		if err != nil {
-			log.Fatalf("Failed to create exporter: %v", err)
-		}
+	if err != nil {
+		log.Fatalf("✗ Failed to create exporter: %v", err)
 	}
 
 	res, err := resource.New(
@@ -73,7 +74,7 @@ func InitTracer(cfg *config.Config) func() {
 		resource.WithProcess(),
 	)
 	if err != nil {
-		log.Fatalf("Failed to create resource: %v", err)
+		log.Fatalf("✗ Failed to create resource: %v", err)
 	}
 
 	tp := sdktrace.NewTracerProvider(
@@ -87,7 +88,7 @@ func InitTracer(cfg *config.Config) func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		if err := tp.Shutdown(ctx); err != nil {
-			log.Printf("Error shutting down tracer provider: %v", err)
+			log.Printf("❗ Error shutting down tracer provider: %v", err)
 		}
 	}
 }

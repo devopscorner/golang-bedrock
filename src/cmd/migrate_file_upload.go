@@ -4,12 +4,12 @@ package main
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/devopscorner/golang-bedrock/src/config"
 	"github.com/devopscorner/golang-bedrock/src/driver"
 	"github.com/devopscorner/golang-bedrock/src/model"
+	"github.com/devopscorner/golang-bedrock/src/utility"
 	"gorm.io/gorm"
 )
 
@@ -40,18 +40,17 @@ func MigrateUploader(db *gorm.DB) error {
 	}
 
 	for _, file := range files {
-		t := time.Now().UnixNano()
-		id_time := strconv.FormatInt(t, 10)
-		file.ID = id_time
+		file.ID = utility.GenerateID()
 		file.CreatedAt = time.Now()
 		file.UpdatedAt = time.Now()
 		file.FileURL = fmt.Sprintf("https://example-bucket.s3.amazonaws.com/%s", file.FileName) // Example S3 URL
+		file.Analysis = "Sample analysis for " + file.FileName                                  // Add a sample analysis
 		if err := db.Create(&file).Error; err != nil {
 			fmt.Printf("Failed to insert data for file: %+v\n", file)
 			fmt.Printf("Error: %v\n", err)
 			return err
 		} else {
-			fmt.Printf("Sample file: %+v, created successfully! \n", file.FileName)
+			fmt.Printf("Sample file: %s, created successfully!\n", file.FileName)
 		}
 	}
 
