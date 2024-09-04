@@ -173,7 +173,7 @@ config:
         Host                opsearch-master.monitoring.svc
         Port                9200
         HTTP_User           admin
-        HTTP_Passwd         aw5cb2024
+        HTTP_Passwd         s3cr3tpassw0rd
         Logstash_Format     On
         Logstash_Prefix     devopscorner-nonprod
         Retry_Limit         Off

@@ -1,0 +1,332 @@
+---
+replicaCount: 1
+
+secret:
+  enabled: false
+  name: "secret-golang-bedrock"
+  mountPath: {}
+  subPath: {}
+  readOnly: true
+  data: {}
+
+configMap:
+  enabled: false
+  name: "config-golang-bedrock"
+  mountPath: /app/core/config
+  readOnly: true
+  data:
+    .app.config.json: |-
+      {
+          "AppName": "Golang Bedrock Service",
+          "GRPCTimeout": 10,
+          "CacheExpiry": 300,
+          "CacheCleanup": 600,
+          "DefaultPageLimit": 3,
+          "ClientTimeout": 10
+      }
+
+image:
+  repository: devopscorner/golang-bedrock
+  pullPolicy: Always  # IfNotPresent
+  tag: "alpine"
+
+imagePullSecrets:
+  - name: "devopspoc-docker-secret"
+
+nameOverride: "devopspoc-golang-bedrock"
+fullnameOverride: "devopspoc-golang-bedrock"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: devopspoc-golang-bedrock
+  namespace: devops-tools
+
+## Persist data to a persistent volume
+persistence:
+  enabled: true
+  storageClass: "nfs-client-metrics"
+  accessMode: ReadWriteOnce
+  capacity: 500Mi
+  size: 50Mi
+  annotations: {}
+  selector: {}
+  nfs:
+    path: "/devopscorner/golang-bedrock"
+    server: "fs-0987612345.efs.us-west-2.amazonaws.com"
+
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+
+containers:
+  ports:
+    - name: http
+      containerPort: 8080
+      protocol: TCP
+
+ingress:
+  enabled: true
+  ingressName: devopspoc-golang-bedrocks-ingress
+  ingressClassName: nginx
+  annotations:
+    # cert-manager.io/acme-challenge-type: "http01"
+    # cert-manager.io/cluster-issuer: "devopspoc-nonprod"
+    ingress.kubernetes.io/ssl-passthrough: "true"
+    ingress.kubernetes.io/whitelist-source-range: "10.103.0.0/16"
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    # nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Golang Bedrock"
+    # nginx.ingress.kubernetes.io/auth-secret: "golang-bedrock-auth"
+    # nginx.ingress.kubernetes.io/auth-type: "basic"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "*"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  hosts:
+    - host: golang-bedrock.awscb.id
+      http:
+        paths:
+          - path: /
+            pathType: Prefix # Prefix -or - ImplementationSpecific
+            backend:
+              service:
+                name: devopspoc-golang-bedrock
+                port:
+                  number: 80
+  tls:
+    - secretName: devopspoc-nonprod-golang-bedrocks-tls
+      hosts:
+        - golang-bedrock.awscb.id
+  extraPaths: []
+
+application:
+  enabled: true
+  env:
+    - name: HELM_TEMPLATE_NAME
+      value: "devopscorner-bedrock"
+    ## ALPINE ##
+    - name: ALPINE_VERSION
+      value: 3.18
+    ## GIN RESTful ##
+    - name: GIN_MODE
+      value: "release"
+    - name: APP_URL
+      value: "http://0.0.0.0"
+    - name: APP_PORT
+      value: 8080
+    ## DATABASE ##
+    - name: DB_CONNECTION
+      value: sqlite
+    - name: DB_HOST
+      value: "0.0.0.0"
+    - name: DB_PORT
+      value: 5000
+    - name: DB_DATABASE
+      value: "golang-bedrock.db"
+    - name: DB_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: DB_USERNAME
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: DB_PASSWORD
+    ## JWT Token ##
+    - name: JWT_AUTH_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: JWT_AUTH_USERNAME
+    - name: JWT_AUTH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: JWT_AUTH_PASSWORD
+    - name: JWT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: JWT_SECRET
+    ## LOGGER ##
+    - name: LOG_LEVEL
+      value: INFO
+    ## AWS Credentials ##
+    - name: AWS_REGION
+      value: us-west-2
+    - name: AWS_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: AWS_ACCESS_KEY
+    - name: AWS_SECRET_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: AWS_SECRET_KEY_ID
+    - name: AWS_BUCKET_NAME
+      value: devopscorner-bedrock
+    - name: AMAZON_BEDROCK_AGENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: AMAZON_BEDROCK_AGENT_ID
+    - name: AMAZON_BEDROCK_MODEL_ID
+      value: "anthropic.claude-3-sonnet-20240229-v1:0"
+    - name: AMAZON_BEDROCK_VERSION
+      value: "bedrock-2023-05-31"
+    ## OPENSEARCH ##
+    - name: OPENSEARCH_ENDPOINT
+      value: "https://opensearch.us-west-2.es.amazonaws.com"
+    - name: OPENSEARCH_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: OPENSEARCH_USERNAME
+    - name: OPENSEARCH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: OPENSEARCH_PASSWORD
+    ## PROMETHEUS ##
+    - name: PROMETHEUS_ENDPOINT
+      value: "http://xignals-prometheus.monitoring.svc:9090"
+    - name: PROMETHEUS_PORT
+      value: 9090
+    ## LOKI ##
+    - name: LOKI_ENDPOINT
+      value: "http://xignals-loki.monitoring.svc:3100"
+    - name: LOKI_PORT
+      value: 3100
+    ## GRAFANA ##
+    - name: GRAFANA_ENDPOINT
+      value: "http://xignals-grafana.monitoring.svc:3000"
+    - name: GRAFANA_PORT
+      value: 3000
+    - name: GRAFANA_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: GRAFANA_API_KEY
+    ## OPENTELEMETRY ##
+    - name: OTEL_INSTRUMENTATION_METRIC_ENABLED
+      value: true
+    - name: OTEL_INSTRUMENTATION_TRACE_ENABLED
+      value: true
+    - name: OTEL_INSTRUMENTATION_LOG_ENABLED
+      value: true
+    - name: OTEL_INSTRUMENTATION_TRACE_NAME
+      value: "jaeger"
+    - name: OTEL_ENVIRONMENT
+      value: "nonprod"
+    - name: OTEL_SERVICE_NAME
+      value: "golang-bedrock"
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://xignals-poc-otelcol.monitoring.svc:4317"
+    - name: OTEL_EXPORTER_OTLP_INSECURE
+      value: true
+    - name: OTEL_EXPORTER_OTLP_HEADERS
+      value: ""
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: ""
+    - name: OTEL_TIME_INTERVAL
+      value: 1
+    - name: OTEL_RANDOM_TIME_ALIVE_INCREMENTER
+      value: 1
+    - name: OTEL_RANDOM_TOTAL_HEAP_SIZE_UPPER_BOUND
+      value: 100
+    - name: OTEL_RANDOM_THREAD_ACTIVE_UPPER_BOUND
+      value: 10
+    - name: OTEL_RANDOM_CPU_USAGE_UPPER_BOUND
+      value: 100
+    ## JAEGER ##
+    - name: JAEGER_AGENT_PORT
+      value: 6831
+    - name: JAEGER_SAMPLER_TYPE
+      value: "const"
+    - name: JAEGER_SAMPLER_PARAM
+      value: 1
+    - name: JAEGER_SAMPLER_MANAGER_HOST_PORT
+      value: "http://xignals-poc-jaeger-agent.monitoring.svc:5778"
+    - name: JAEGER_REPORTER_LOG_SPANS
+      value: true
+    - name: JAEGER_REPORTER_BUFFER_FLUSH_INTERVAL
+      value: "5*time.Second"
+    - name: JAEGER_REPORTER_MAX_QUEUE_SIZE
+      value: 100
+    - name: JAEGER_REPORTER_LOCAL_AGENT_HOST_PORT
+      value: "http://xignals-poc-jaeger-agent.monitoring.svc:6831"
+    - name: JAEGER_REPORTER_COLLECTOR_ENDPOINT
+      value: "http://xignals-poc-jaeger-collector.monitoring.svc:14268/api/traces"
+    - name: JAEGER_REPORTER_COLLECTOR_USER=${JAEGER_REPORTER_COLLECTOR_USER:-devopscorner}
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: JAEGER_REPORTER_COLLECTOR_USER
+    - name: JAEGER_REPORTER_COLLECTOR_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: golang-bedrock
+          key: JAEGER_REPORTER_COLLECTOR_PASSWORD
+    - name: JAEGER_TAGS
+      value: "golang,otel,restful,api,bedrock"
+    ## XRAY ##
+    - name: XRAY_VERSION
+      value: latest
+    - name: XRAY_DAEMON_ENDPOINT
+      value: "https://xray.us-west-2.amazonaws.com"
+    - name: XRAY_DAEMON_PORT
+      value: 2000
+
+envFrom:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 300Mi
+  requests:
+    cpu: 150m
+    memory: 150Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector:
+  enabled: false
+  select:
+    node: "devopspoc-monitoring" # DEV/UAT Cluster
+
+tolerations: []
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+livenessProbe: {}
+
+readinessProbe: {}
+
+affinity: {}
+
+securityContext: {}
