@@ -20,7 +20,7 @@ export ECR_IMAGE="$CI_REGISTRY/$CI_PROJECT_PATH/$CI_PROJECT_NAME"
 export TARGETPLATFORM="linux/amd64"
 export ARCH="amd64"
 
-export VERSION="1.1.4"
+export VERSION=`git describe --tags`
 
 build_golang_bedrock() {
     TAGS="3.18 \
@@ -33,8 +33,8 @@ build_golang_bedrock() {
     ### DockerHub Build Images ###
     for TAG in $TAGS; do
         echo " Build Image => $IMAGE:$TAG"
-        docker build \
-            -f Dockerfile-$ARCH \
+        docker build --no-cache \
+            -f Dockerfile \
             -t $IMAGE:$TAG .
         echo ''
     done
@@ -42,8 +42,8 @@ build_golang_bedrock() {
     ### ECR Build Images ###
     for TAG in $TAGS; do
         echo " Build Image => $ECR_IMAGE:$TAG"
-        docker build \
-            -f Dockerfile-$ARCH \
+        docker build --no-cache \
+            -f Dockerfile \
             -t $ECR_IMAGE:$TAG .
         echo ''
     done
