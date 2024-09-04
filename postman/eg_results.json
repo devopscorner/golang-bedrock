@@ -1,0 +1,20 @@
+{
+    "data": {
+        "analysis": "Based on the information provided, here's an analysis of the file upload:\n\n1. **Filename**: `1725417360394229000_Learning-DevOps.pdf`\n   - The filename appears to be a combination of a long numeric value (`1725417360394229000`) followed by an underscore and a descriptive name (`Learning-DevOps`).\n   - The numeric value could potentially be a timestamp or a unique identifier.\n   - The descriptive name suggests that the file is a PDF document related to learning DevOps practices.\n   - The file extension `.pdf` indicates that it is a Portable Document Format (PDF) file.\n\n2. **File Size**: `19141577 bytes`\n   - The file size is approximately 18.27 MB (19,141,577 bytes).\n   - This is a relatively large file size for a PDF document, which could indicate that the document contains a significant amount of content, possibly including images or other media.\n\n3. **File Type**: `application/pdf`\n   - The MIME type `application/pdf` is the standard type for PDF files.\n   - This confirms that the file is indeed a PDF document, which is consistent with the file extension.\n\nOverall, the provided information suggests that the file upload is a PDF document related to learning DevOps practices, with a unique identifier or timestamp in the filename. The file size is relatively large, indicating that it may contain substantial content or embedded media. However, without further context or access to the file itself, it's difficult to provide a more detailed analysis of the file's contents or purpose.",
+        "createdAt": "2024-09-04T09:36:25.159682+07:00",
+        "fileName": "1725417360394229000_Learning-DevOps.pdf",
+        "fileSize": 19141577,
+        "fileType": "application/pdf",
+        "fileURL": "https://example.s3.amazonaws.com/1725417360394229000_Learning-DevOps.pdf",
+        "id": "1725417360394229000",
+        "metrics": {
+            "analysisLatency": "11.85446525s",
+            "inputTokens": 30,
+            "outputTokens": 375,
+            "totalLatency": "11.854582167s",
+            "uploadLatency": "10.667µs"
+        },
+        "updatedAt": "2024-09-04T09:36:37.017314+07:00",
+        "uploadedBy": "user1@example.com"
+    }
+}
